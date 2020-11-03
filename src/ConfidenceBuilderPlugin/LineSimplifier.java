@@ -25,7 +25,23 @@ public class LineSimplifier {
         }
         return coordinateList;
     }
-
+    public ArrayList<double[]> VisvaligamWhyattSimplifyWill(int numToKeep, ArrayList<double[]> coordinateList){
+        //Stolen from Will's function in LifeSimGIS by the same name. Thins a line down to the specified amount of points based on the VW algorithm.
+        int removeLimit = coordinateList.size()-numToKeep;
+        int minIndex = 1;
+        for(int i=0; i<removeLimit; i++){
+            double minArea = Area(coordinateList.get(0), coordinateList.get(1), coordinateList.get(2) );
+            for(int j=2; j< coordinateList.size() - 2; j++){
+                double tmpArea = Area(coordinateList.get(j-1), coordinateList.get(j), coordinateList.get(j+1) );
+                if(tmpArea < minArea){
+                    minIndex = j;
+                    minArea = tmpArea;
+                }
+            }
+            coordinateList.remove(minIndex);
+        }
+        return coordinateList;
+    }
     private float Area(double[] point0, double[] point1, double[] point2) {
           //taken from Will Lehman's area function in LifeSimGIS by the same name. Takes 3 points and returns the area of the triangle formed by them.
         int x=0;
