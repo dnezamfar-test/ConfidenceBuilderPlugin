@@ -31,12 +31,12 @@ public class Line {
         }
     }
     private float Area(Point point0, Point point1, Point point2) {
-          //taken from Will Lehman's area function in LifeSimGIS by the same name. Takes 3 points and returns the area of the triangle formed by them.
-        return ((float) Math.abs(((point0.x*point1.y) + (point1.x*point2.y) + (point2.x*point0.y)
-                - (point1.x*point0.y) - (point2.x*point1.y) - (point0.x*point2.y)) * 0.5));
+          //taken from Will Lehman's area function in LifeSimGIS by the same name. Takes 3 points and returns the area of the triangle formed by them. *****FIX
+        return ((float) Math.abs(((point0.getX()*point1.getY()) + (point1.getX()*point2.getY()) + (point2.getX()*point0.getY())
+                - (point1.getX()*point0.getY()) - (point2.getX()*point1.getY()) - (point0.getX()*point2.getY())) * 0.5));
     }
-    public double GetInvCDF(double probability){
-        // Stolen from Will's statistics Library
+    private double GetInvCDF(double probability){
+        // Stolen from Will's statistics Library //Create normal distribution class. Does not belong in line.
         double zScore;
         //Taylor Series Coefficients
         double c0 = 2.515517;
@@ -54,9 +54,9 @@ public class Line {
         zScore = t - (c0+c1*t+c2*Math.pow(t,2)) / (1+d1*t+d2*Math.pow(t,2)+d3*Math.pow(t,3));
         return zScore;
     }
-    private double PerpendicularDistance(Point a, Point b, Point c){
-        double area = Math.abs(0.5*(a.x*(b.y-c.y) + b.x * (c.y-a.y) + c.x * (a.y - b.y)));
-        double base = Math.sqrt(Math.pow(a.x-b.x,2)+Math.pow(a.y-b.y,2));
+    private double PerpendicularDistance(Point lineStart, Point testPoint, Point lineEnd){
+        double area = Math.abs(0.5*(lineStart.getX()*(testPoint.getY()-lineEnd.getY()) + testPoint.getX() * (lineEnd.getY()-lineStart.getY()) + lineEnd.getX() * (lineStart.getY() - testPoint.getY())));
+        double base = Math.sqrt(Math.pow(lineStart.getX()-testPoint.getX(),2)+Math.pow(lineStart.getY()-testPoint.getY(),2));
         return (area/base * 2); //height
     }
 }
