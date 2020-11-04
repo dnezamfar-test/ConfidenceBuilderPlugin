@@ -4,7 +4,7 @@ import java.lang.Math;
 
 public class Line {
     private ArrayList<Point> points;
-    
+
     public Line(double[] x, double[] y) {
         for(int i=0; i < x.length ; i++){
             Point pt = new Point(x[i],y[i]);
