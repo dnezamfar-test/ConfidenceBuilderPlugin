@@ -4,7 +4,7 @@ import java.lang.Math;
 
 public class Line {
     //Variables
-    public ArrayList<Point> points;
+    private ArrayList<Point> points;
     //Constructor
     public Line(double[] x, double[] y) {
         for(int i=0; i < x.length ; i++){
@@ -18,10 +18,10 @@ public class Line {
         int removeLimit = (points.size()) - numToKeep;
         int minIndex = 1;
         for(int i = 0; i < removeLimit; i++) {
-            float minArea = Area(points.get(0), points.get(1), points.get(2)); // This is the baseline we'll start our first comparison to.
+            float minArea = Polygon.AreaOfTriangle(points.get(0), points.get(1), points.get(2)); // This is the baseline we'll start our first comparison to.
             for(int j=2; j< points.size()-2;j++) // starting at 2, because we're gonna start calculating areas, and we already calculated area 1.
             { //ending at minus 2 because we don't want the last point, and the size property uses counting numbers, so we have to reduce by an extra -1 to account for 0 index
-                float tmpArea = Area(points.get(j-1), points.get(j), points.get(j+1));
+                float tmpArea = Polygon.AreaOfTriangle(points.get(j-1), points.get(j), points.get(j+1));
                 if (tmpArea < minArea) {
                     minIndex = j;
                     minArea = tmpArea;
@@ -30,11 +30,7 @@ public class Line {
             points.remove(minIndex);
         }
     }
-    private float Area(Point point0, Point point1, Point point2) {
-          //taken from Will Lehman's area function in LifeSimGIS by the same name. Takes 3 points and returns the area of the triangle formed by them. *****FIX
-        return ((float) Math.abs(((point0.getX()*point1.getY()) + (point1.getX()*point2.getY()) + (point2.getX()*point0.getY())
-                - (point1.getX()*point0.getY()) - (point2.getX()*point1.getY()) - (point0.getX()*point2.getY())) * 0.5));
-    }
+
     private double GetInvCDF(double probability){
         // Stolen from Will's statistics Library //Create normal distribution class. Does not belong in line.
         double zScore;
