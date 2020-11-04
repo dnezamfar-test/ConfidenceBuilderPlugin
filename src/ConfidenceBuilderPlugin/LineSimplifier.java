@@ -69,4 +69,12 @@ public class LineSimplifier {
         zScore = t - (c0+c1*t+c2*Math.pow(t,2)) / (1+d1*t+d2*Math.pow(t,2)+d3*Math.pow(t,3));
         return zScore;
     }
+    private double PerpendicularDistance(double[] a, double[] b, double[] c){
+        int x=0;
+        int y=1;
+
+        double area = Math.abs(0.5*(a[x]*(b[y]-c[y]) + b[x] * (c[y]-a[y]) + c[x] * (a[y] - b[y])));
+        double base = Math.sqrt(Math.pow(a[x]-b[x],2)+Math.pow(a[y]-b[y],2));
+        return (area/base * 2); //height
+    }
 }
