@@ -16,9 +16,9 @@ public class Point {
         _x = x;
         _y = y;
     }
-    public static double PerpendicularDistance(Point lineStart, Point testPoint, Point lineEnd){
-        double area = Math.abs(0.5*(lineStart.getX()*(testPoint.getY()-lineEnd.getY()) + testPoint.getX() * (lineEnd.getY()-lineStart.getY()) + lineEnd.getX() * (lineStart.getY() - testPoint.getY())));
-        double base = Math.sqrt(Math.pow(lineStart.getX()-testPoint.getX(),2)+Math.pow(lineStart.getY()-testPoint.getY(),2));
+    public static double PerpendicularDistance(Point lineStart, Point lineEnd, Point myPoint){
+        double area = Math.abs(0.5*(lineStart.getX()*(lineEnd.getY()-myPoint.getY()) + lineEnd.getX() * (myPoint.getY()-lineStart.getY()) + myPoint.getX() * (lineStart.getY() - lineEnd.getY())));
+        double base = Math.sqrt(Math.pow(lineStart.getX()-lineEnd.getX(),2)+Math.pow(lineStart.getY()-lineEnd.getY(),2));
         return (area/base * 2); //height
     }
 }

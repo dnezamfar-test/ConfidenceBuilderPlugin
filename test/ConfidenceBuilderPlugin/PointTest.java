@@ -8,7 +8,7 @@ class PointTest {
     Point pt2_4 = new Point(2,4);
 
     @Test
-    void perpendicularDistance() {
-        assertEquals(Point.PerpendicularDistance(pt0_0, pt1_1, pt2_4), Math.sqrt(5)/5);
+    void perpendicularDistanceShouldCalcCorrect() {
+        assertEquals(Point.PerpendicularDistance(pt0_0,pt2_4, pt1_1), 0.4472135954999579);
     }
 }
