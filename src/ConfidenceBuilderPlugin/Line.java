@@ -9,7 +9,7 @@ public class Line {
     public ArrayList<Point> getPointsList() { return _pointsList; }
     public Point getPoint(int index){return _pointsList.get(index);}
     public int getVerticesCount(){return _pointsList.size();}
-
+    public double getIntegratedArea(){return MidpointIntegral();}
     //Constructor
     public Line(double[] x, double[] y) {
         _pointsList = new ArrayList<>();
@@ -20,4 +20,13 @@ public class Line {
         }
     //Method
     public void RemovePoint(int index){_pointsList.remove(index);}
+    private double MidpointIntegral(){
+        double area = 0;
+      for(int i=0; i<_pointsList.size()-1;i++){
+          double tmpHeight = (_pointsList.get(i).getY()+_pointsList.get(i+1).getY())/2;
+          double tmpWidth = _pointsList.get(i+1).getX()-_pointsList.get(i).getX();
+          area += tmpHeight*tmpWidth;
+      }
+      return area;
+    }
 }

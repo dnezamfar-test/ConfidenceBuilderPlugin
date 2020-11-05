@@ -17,13 +17,16 @@ class LineThinnerTest {
             3481, 3600, 3721, 3844, 3969, 4096, 4225, 4356, 4489, 4624, 4761, 4900, 5041, 5184, 5329, 5476, 5625, 5776,
             5929, 6084, 6241, 6400, 6561, 6724, 6889, 7056, 7225, 7396, 7569, 7744, 7921, 8100, 8281, 8464, 8649, 8836,
             9025, 9216, 9409, 9604, 9801};
-
+    Line yIsXsquared = new Line(Xords,Yords);
 
     @Test
-    void visvaligamWhyattSimplifyShouldKeepFiftyPoints() {
-        //x^2 function
-        Line yIsXsquared = new Line(Xords,Yords);
+    void visvaligamWhyattSimplifyShouldKeepSpecifiedNumPoints() {
         assertEquals(LineThinner.VisvaligamWhyattSimplify(50, yIsXsquared).getVerticesCount(),50);
+    }
+    @Test
+    void visvaligamWhyattSimplifyShouldHaveSimilarAreaUnderCurve(){
+        assertTrue(Math.abs((LineThinner.VisvaligamWhyattSimplify(50, yIsXsquared).getIntegratedArea()) - 323433) < .01*323433 );
+        //comparison number is true integral of y=x^2 from 0 to 99
     }
 }
 
