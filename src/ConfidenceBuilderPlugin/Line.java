@@ -18,7 +18,6 @@ public class Line {
                 _pointsList.add(pt);
             }
         }
-
     //Method
     public void RemovePoint(int index){_pointsList.remove(index);}
 }
