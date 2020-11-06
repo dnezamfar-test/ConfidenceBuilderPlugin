@@ -13,7 +13,7 @@ public class LineThinner {
         Line newLine = new Line();
         reducedLineIndices.add(firstPnt);
         reducedLineIndices.add(lastPnt);
-        DouglasPeukerReductionIterator(firstPnt,lastPnt,.1, myLine);
+        DouglasPeukerReductionIterator(firstPnt,lastPnt,tolerance, myLine);
         Collections.sort(reducedLineIndices);
         for (int index: reducedLineIndices)
         {
