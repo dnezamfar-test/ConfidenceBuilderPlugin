@@ -24,9 +24,13 @@ class LineThinnerTest {
         assertEquals(LineThinner.VisvaligamWhyattSimplify(50, yIsXsquared).getVerticesCount(),50);
     }
     @Test
-    void visvaligamWhyattSimplifyShouldHaveSimilarAreaUnderCurve(){
+    void visvaligamWhyattSimplifyShouldHaveSimilarAreaUnderCurve() {
         assertTrue(Math.abs((LineThinner.VisvaligamWhyattSimplify(50, yIsXsquared).getIntegratedArea()) - 323433) < .01*323433 );
         //comparison number is true integral of y=x^2 from 0 to 99
+    }
+    @Test
+    void douglasPeukerReductionShouldHaveSimilarAreaUnderCurve() {
+        assertTrue(Math.abs((LineThinner.DouglasPeukerReduction(yIsXsquared,.1).getIntegratedArea())-323433) < .01*323433);
     }
 }
 

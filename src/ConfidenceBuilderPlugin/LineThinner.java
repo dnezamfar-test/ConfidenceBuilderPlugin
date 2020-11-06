@@ -1,6 +1,44 @@
 package ConfidenceBuilderPlugin;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class LineThinner {
+    //fields
+    private static ArrayList<Integer> reducedLineIndices;
+    //methods
+    public static Line DouglasPeukerReduction(Line myLine, double tolerance){
+        reducedLineIndices = new ArrayList<>() ;
+        int firstPnt = 0;
+        int lastPnt = myLine.getVerticesCount()-1;
+        Line newLine = new Line();
+        reducedLineIndices.add(firstPnt);
+        reducedLineIndices.add(lastPnt);
+        DouglasPeukerReductionIterator(firstPnt,lastPnt,.1, myLine);
+        Collections.sort(reducedLineIndices);
+        for (int index: reducedLineIndices)
+        {
+            Point pointToAdd = myLine.getPoint(index);
+            newLine.AddPoint(pointToAdd);
+        }
+        return newLine;
+        }
+    private static void DouglasPeukerReductionIterator(int firstPnt, int lastPnt, double tolerance, Line myLine){
+        double maxDistance = 0;
+        int farthestIndex = 0;
+        double distance;
+        for(int i=firstPnt; i<lastPnt-1; i++){
+            distance = Point.PerpendicularDistance(myLine.getPoint(firstPnt),myLine.getPoint(lastPnt), myLine.getPoint(i));
+            if(distance>maxDistance){
+                maxDistance = distance;
+                farthestIndex = i;
+            }
+        }
+        if(maxDistance>tolerance & farthestIndex != 0){
+            reducedLineIndices.add(farthestIndex);
+            DouglasPeukerReductionIterator(firstPnt,farthestIndex,tolerance,myLine);
+            DouglasPeukerReductionIterator(farthestIndex,lastPnt,tolerance,myLine);
+            }
+        }
     public static Line VisvaligamWhyattSimplify(int numToKeep, Line myLine) {
         //Thins a line down to the specified amount of points based on the VW algorithm.
         //Implementation based on the description of the method here: http://bost.ocks.org/mike/simplify/
@@ -22,3 +60,4 @@ public class LineThinner {
         return myLine;
     }
 }
+
