@@ -16,6 +16,7 @@ public class Point {
         _x = x;
         _y = y;
     }
+    //Calculates the distance from myPoint to the line defined by lineStart and lineEnd
     public static double PerpendicularDistance(Point lineStart, Point lineEnd, Point myPoint){
         double area = Math.abs(0.5*(lineStart.getX()*(lineEnd.getY()-myPoint.getY()) + lineEnd.getX() * (myPoint.getY()-lineStart.getY()) + myPoint.getX() * (lineStart.getY() - lineEnd.getY())));
         double base = Math.sqrt(Math.pow(lineStart.getX()-lineEnd.getX(),2)+Math.pow(lineStart.getY()-lineEnd.getY(),2));
