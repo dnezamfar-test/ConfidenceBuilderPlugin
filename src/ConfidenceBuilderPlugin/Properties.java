@@ -11,7 +11,7 @@ public class Properties {
     String _propertiesFile;
     String _simulationName;
     ArrayList<Double> _xOrds;
-    ArrayList<Double> _CI_Vals;
+    ArrayList<Double> _CI_Values;
 
     //constructor
     public Properties(String _propertiesFile) {
@@ -25,20 +25,25 @@ public class Properties {
             while ((propertyLine = brp.readLine()) != null) {
                 tmp = propertyLine.split(",");
                 if(tmp.length==0){continue;}
-                if(tmp[0].equals("SimulationName")){
-                    _simulationName = tmp[1];
-                }else if(tmp[0].equals("XOrds")){
-                    _xOrds = new ArrayList<>();
-                    for(String s: tmp){
-                        if(s.equals("XOrds")){continue;}
-                        _xOrds.add(1-Double.parseDouble(s));
-                    }
+                switch (tmp[0]) {
+                    case "SimulationName" -> _simulationName = tmp[1];
 
-                }else if(tmp[0].equals("CI_Vals")){
-                    _CI_Vals = new ArrayList<>();
-                    for(String s: tmp){
-                        if(s.equals("CI_Vals")){continue;}
-                        _CI_Vals.add(Double.parseDouble(s));
+
+                    case "XOrds" -> {
+                        _xOrds = new ArrayList<>();
+                        for (String s : tmp) {
+                            if (s.equals("XOrds")) {
+                                continue; }
+                            _xOrds.add(1 - Double.parseDouble(s)); } }
+
+
+                    case "CI_Vals" -> {
+                        _CI_Values = new ArrayList<>();
+                        for (String s : tmp) {
+                            if (s.equals("CI_Vals")) {
+                                continue; }
+                            _CI_Values.add(Double.parseDouble(s));
+                        }
                     }
                 }
             }
@@ -69,7 +74,7 @@ public class Properties {
         return _xOrds;
     }
 
-    public ArrayList<Double> getCI_Vals() {
-        return _CI_Vals;
+    public ArrayList<Double> getCI_Values() {
+        return _CI_Values;
     }
 }

@@ -26,6 +26,6 @@ class PropertiesTest {
 
     @Test
     void getCI_ValsReturnsCorrectCIVals() {
-        assertArrayEquals(propertiesTest.getCI_Vals().toArray(), cI_Vals.toArray());
+        assertArrayEquals(propertiesTest.getCI_Values().toArray(), cI_Vals.toArray());
     }
 }
