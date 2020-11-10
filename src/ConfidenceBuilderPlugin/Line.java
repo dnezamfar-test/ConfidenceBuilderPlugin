@@ -26,6 +26,7 @@ public class Line {
     public void RemovePoint(int index){_pointsList.remove(index);}
     public void AddPoint(Point pnt){_pointsList.add(pnt);}
 
+    //Returns integral of a line using midpoint rectangular integration
     private double MidpointIntegral(){
         double area = 0;
       for(int i=0; i<_pointsList.size()-1;i++){
