@@ -1,18 +1,19 @@
 package ConfidenceBuilderPlugin;
-
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PropertiesTest {
+class PropertyFileReaderTest {
     String currentDirectory = System.getProperty("user.dir");
     String propertiesPath = currentDirectory + "\\ConfidenceBuilder.props";
-    Properties propertiesTest = new Properties(propertiesPath);
-    ArrayList<Double> xOrds = new ArrayList<>(Arrays.asList(1-0.5, 1-0.8, 1-0.9, 1-0.95, 1-0.98, 1-0.99, 1-0.995, 1-0.998));
+    Properties propertiesTest = PropertyFileReader.Read(propertiesPath);
+    ArrayList<Double> xOrds = new ArrayList<>(Arrays.asList(1 - 0.5, 1 - 0.8, 1 - 0.9, 1 - 0.95, 1 - 0.98, 1 - 0.99, 1 - 0.995, 1 - 0.998));
     ArrayList<Double> cI_Vals = new ArrayList<>(Arrays.asList(.975, .025));
+
+    @Test
+    void PropertyFileReaderReturnsCorrectSimulationName() { assertEquals("12-Stochastic", propertiesTest.getSimulationName()); }
 
     @Test
     void getSimulationNameReturnsCorrectName() {
