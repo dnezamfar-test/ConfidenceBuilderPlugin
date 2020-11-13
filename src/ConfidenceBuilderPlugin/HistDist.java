@@ -14,21 +14,21 @@ import java.util.Arrays;
 public class HistDist {
     private int[] _bins;
     private double _binWidth = 0;
-    private double _min;
-    private double _max;
+    private double _histMin;
+    private double _histMax;
     private int _numObs = 0;
     private double _mean = 0;
     private int _convergedIteration =0;
     private boolean _converged = false;
-    public HistDist(int numBins, double min, double max)
+    public HistDist(int numBins, double histMin, double histMax)
     {
-        if(numBins<=0 || min>max)
+        if(numBins<=0 || histMin>histMax)
         {
             return;
         }
-        _min = min;
-        _max = max;
-        _binWidth = (max-min)/numBins;
+        _histMin = histMin;
+        _histMax = histMax;
+        _binWidth = (histMax-histMin)/numBins;
         _bins = new int[numBins];
         Arrays.fill(_bins, 0);
     }
@@ -36,8 +36,8 @@ public class HistDist {
     public int getNumObs(){
         return _numObs;
     }
-    public double getMin(){return _min;}
-    public double getMax(){return _max;}
+    public double getMin(){return _histMin;}
+    public double getMax(){return _histMax;}
     public boolean getConverged(){ return _converged;}
     public int getConvergedIteration(){return _convergedIteration;}
     public boolean addObservation(double obs)
@@ -47,26 +47,26 @@ public class HistDist {
             return false;
         }
         //Add bins if necessary
-        if(obs<_min)
+        if(obs<_histMin)
         {
-            int numBinsToAdd = (int)Math.ceil((_min - obs)/_binWidth);
+            int numBinsToAdd = (int)Math.ceil((_histMin - obs)/_binWidth);
             int[] oldBins = _bins;
             _bins = new int[oldBins.length+numBinsToAdd];
             Arrays.fill(_bins, 0);
             System.arraycopy(oldBins, 0, _bins, numBinsToAdd, oldBins.length);
-            _min = _min - numBinsToAdd * _binWidth;
+            _histMin = _histMin - numBinsToAdd * _binWidth;
         }
-        else if(obs > _max)
+        else if(obs > _histMax)
         {
-            int numBinsToAdd = (int)Math.ceil((obs - _max)/_binWidth);
+            int numBinsToAdd = (int)Math.ceil((obs - _histMax)/_binWidth);
             int[] oldBins = _bins;
             _bins = new int[oldBins.length+numBinsToAdd];
             Arrays.fill(_bins, 0);
             System.arraycopy(oldBins, 0, _bins, 0, oldBins.length);
-            _max = _max + numBinsToAdd * _binWidth;
+            _histMax = _histMax + numBinsToAdd * _binWidth;
         }
         //Add observation to its bin
-        int idx = (int)((obs-_min)/_binWidth);
+        int idx = (int)((obs-_histMin)/_binWidth);
         idx = idx < _bins.length ? idx : _bins.length-1; //when obs == _max
         _bins[idx]++;
         _numObs++;
@@ -98,11 +98,11 @@ public class HistDist {
     {
         if(_numObs<=0 || q<=0.0)
         {
-            return _min;
+            return _histMin;
         }
         else if(q>=1.0)
         {
-            return _max;
+            return _histMax;
         }
         double qObs = q*_numObs;
         if(q<=0.5)
@@ -116,7 +116,7 @@ public class HistDist {
                 binObs = _bins[idx];
                 cumObs += binObs;
             }
-            return _min + _binWidth * (idx+1 - (cumObs - qObs) / binObs);
+            return _histMin + _binWidth * (idx+1 - (cumObs - qObs) / binObs);
         }
         else
         {
@@ -129,20 +129,20 @@ public class HistDist {
                 binObs = _bins[idx];
                 cumObs -= binObs;
             }
-            return _max - _binWidth * (_bins.length-idx + (qObs - cumObs) / binObs);
+            return _histMax - _binWidth * (_bins.length-idx + (qObs - cumObs) / binObs);
         }
     }
     public double getCDF(double val)
     {
-        if(_numObs<=0 || val<=_min)
+        if(_numObs<=0 || val<=_histMin)
         {
             return 0.0;
         }
-        else if(val>=_max)
+        else if(val>=_histMax)
         {
             return 1.0;
         }
-        double dIdx = (val-_min)/_binWidth;
+        double dIdx = (val-_histMin)/_binWidth;
         if(dIdx<=0)
         {
             return 0.0;
@@ -176,7 +176,7 @@ public class HistDist {
     }
     public double getPDF(double val)
     {
-        int idx = (int)((val-_min)/_binWidth);
+        int idx = (int)((val-_histMin)/_binWidth);
         if(idx<0 || idx>=_bins.length)
         {
             return 0.0;
