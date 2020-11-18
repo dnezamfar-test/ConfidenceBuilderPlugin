@@ -3,7 +3,7 @@ package ConfidenceBuilderPlugin;
 public class NormalDistribution {
 
     public static double GetInvCDF(double probability){
-        // Stolen from Will's statistics Library //Create normal distribution class. Does not belong in line.
+        // Stolen from Will's statistics Library
         double zScore;
         //Taylor Series Coefficients
         double c0 = 2.515517;
