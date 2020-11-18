@@ -30,3 +30,4 @@ class PropertyFileReaderTest {
         assertArrayEquals(propertiesTest.getCI_Values().toArray(), cI_Vals.toArray());
     }
 }
+
