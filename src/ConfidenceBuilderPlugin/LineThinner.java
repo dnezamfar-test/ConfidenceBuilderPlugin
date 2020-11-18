@@ -5,7 +5,8 @@ import java.util.Collections;
 public class LineThinner {
     //fields
     private static ArrayList<Integer> reducedLineIndices;
-    //methods
+
+        //methods
     public static Line DouglasPeukerReduction(Line myLine, double tolerance){
         reducedLineIndices = new ArrayList<>() ;
         int firstPnt = 0;
@@ -53,6 +54,9 @@ public class LineThinner {
                 if (tmpArea < minArea) {
                     minIndex = j;
                     minArea = tmpArea;
+                }
+                if(minIndex==875 && j == myLine.getVerticesCount()-3){
+                    System.out.print("stop!");
                 }
             }
             myLine.RemovePoint(minIndex);

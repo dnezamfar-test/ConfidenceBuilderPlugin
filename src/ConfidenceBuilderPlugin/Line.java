@@ -4,23 +4,18 @@ import java.util.ArrayList;
 public class Line {
     //Variables
     private ArrayList<Point> _pointsList;
-    private double[] _xOrds;
-    private double[] _yOrds;
 
     //Getters
     public ArrayList<Point> getPointsList() { return _pointsList; }
     public Point getPoint(int index){return _pointsList.get(index);}
     public int getVerticesCount(){return _pointsList.size();}
     public double getIntegratedArea(){return MidpointIntegral();}
-    public double[] getXords(){ return _xOrds;}
-    public double[] getYords(){ return _yOrds;}
+    public double[] getXords(){ return ConvertToOrdArray(0);}
+    public double[] getYords(){ return ConvertToOrdArray(1);}
 
     //Constructor
     public Line() {
         _pointsList = new ArrayList<>();
-        _xOrds = null;
-        _yOrds = null;
-
     }
     public Line(double[] x, double[] y) {
         _pointsList = new ArrayList<>();
@@ -28,10 +23,7 @@ public class Line {
             Point pt = new Point(x[i],y[i]);
                 _pointsList.add(pt);
             }
-        _xOrds = x;
-        _yOrds = y;
         }
-
     //Methods
     public void RemovePoint(int index){_pointsList.remove(index);}
     public void AddPoint(Point pnt){_pointsList.add(pnt);}
@@ -45,5 +37,15 @@ public class Line {
       }
       return area;
     }
+    private double[] ConvertToOrdArray(int xOrYIndex){
+        ArrayList<Point> pointList = _pointsList;
+        double[] Ords = new double[pointList.size()];
+        for(int i = 0; i<pointList.size(); i++){
+            if (xOrYIndex==0){
+                Ords[i] = pointList.get(i).getX();}
+            else{
+                Ords[i] = pointList.get(i).getY();}
+        }
+        return Ords;
 
-}
+}}
