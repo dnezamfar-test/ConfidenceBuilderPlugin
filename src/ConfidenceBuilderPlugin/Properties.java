@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Properties { 
     //fields
@@ -11,16 +12,19 @@ public class Properties {
     private String _simulationName;
     private ArrayList<Double> _xOrds;
     private ArrayList<Double> _CI_Values;
-    private double binStartWeight;
-    private double binWeights;
-    private double binEndWeights;
+    private double _binStartWeight;
+    private List<Double> _binWeights;
+    private double _binEndWeights;
 
     //constructor
-    public Properties(String _propertiesFile, String _simulationName, ArrayList<Double> _xOrds, ArrayList<Double> CIvalues) {
+    public Properties(String _propertiesFile, String _simulationName, ArrayList<Double> _xOrds, ArrayList<Double> CIvalues, double binStartWeight, List<Double> binWeights, double binEndWeights) {
         this. _propertiesFile = _propertiesFile;
         this. _simulationName = _simulationName;
         this. _xOrds = _xOrds;
         this. _CI_Values = CIvalues;
+        this._binStartWeight = binStartWeight;
+        this._binEndWeights = binEndWeights;
+        this._binWeights = binWeights;
     }
     //getters
     public String getPropertiesFile() { return _propertiesFile; }
@@ -33,7 +37,7 @@ public class Properties {
     public ArrayList<Double> getCI_Values() {
         return _CI_Values;
     }
-    public double getBinStartWeight() { return binStartWeight; }
-    public double getBinWeights() { return binWeights; }
-    public double getBinEndWeights() { return binEndWeights; }
+    public double getBinStartWeight() { return _binStartWeight; }
+    public List<Double> getBinWeights() { return _binWeights; }
+    public double getBinEndWeights() { return _binEndWeights; }
 }
