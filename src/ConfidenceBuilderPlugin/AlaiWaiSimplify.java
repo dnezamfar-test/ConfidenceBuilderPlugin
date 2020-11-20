@@ -14,18 +14,14 @@ public class AlaiWaiSimplify {
         // Defining the record
         String DssFilePath = ("C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\Just_Full_Freq.dss");
         String Pathname = "/12-Stochastic/Duration Plugin-AlaWaiDurations12/Probability-undef/Frequency Full/A3 - FLOW - 1 Hour DurationMax/Existing C:Determinis:DuratPlugi-AlaWaiDurations12/\n";
-        String saveFile = "C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\Just_Full_Freq_V7_QC.dss";
+        String saveFile = "C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\Just_Full_Freq_V7_Single.dss";
 
         HecDssCatalog catalog = new HecDssCatalog();
         catalog.setDSSFileName(DssFilePath, true);
         String[] pathnameList = catalog.getPathnameList(true);
         int recordNumbers = pathnameList.length;
 
-
-        //Retrieving the Data---------------------------------------
-        for (int j = 0; j<pathnameList.length;j++)
-        {
-         //int j=0;
+        int j=0;
         DSSIdentifier myDss = new DSSIdentifier(DssFilePath, pathnameList[j]);
         PairedDataContainer mypdc = DssFileManagerImpl.getDssFileManager().readPairedDataContainer(myDss);
         double [] xOrds = mypdc.xOrdinates;
@@ -35,19 +31,24 @@ public class AlaiWaiSimplify {
         for(int i=1; i<= 280500; i++){
             xOrds[280500-i]= (1/(1+(((double)i))));
         }
-        // Convert to probability space--------------------------------------
+        //Convert to probability space--------------------------------------
         NormalDist StandardNormal = new NormalDist(0,1);
         for(int i=0; i< xOrds.length; i++){
-            if(xOrds[i] == 1 || xOrds[i] == 0){
-                System.out.print("index: "+i+" value: "+xOrds[i]);
-            }
             xOrds[i] = StandardNormal.invCDF(xOrds[i]);
         }
 
         //Calling the reduction
         Line myLine = new Line(xOrds,yOrds);
+        System.out.println("last point is: " + myLine.getPoint(myLine.getVerticesCount()-1).getY());
         Line mySimpleLine = DouglasPeukerReduction(myLine,.001);
         System.out.println("Number of vertices final: " + mySimpleLine.getVerticesCount());
+        System.out.println("last simple point is: " + myLine.getPoint(myLine.getVerticesCount()-1).getY());
+
+
+
+
+
+
 
         //Bring Zscores back to probabilities
         ArrayList<Double> XordsProbabilities = new ArrayList<>();
@@ -60,9 +61,9 @@ public class AlaiWaiSimplify {
             xCoordinates2[i] = xCoordinates[i];
         }
 
-
-        Line mySimpleLineX = new Line(xCoordinates2,mySimpleLine.getYords() );
-
+        //Line mySimpleLineX = new Line(xCoordinates2,mySimpleLine.getYords() );
+        Line mySimpleLineX = new Line(xCoordinates2,yOrds );
+        System.out.println("last point is: " + mySimpleLineX.getPoint(mySimpleLineX.getVerticesCount()-1).getY());
 
         // Saving everything back
         mypdc.xOrdinates = mySimpleLineX.getXords();
@@ -78,6 +79,11 @@ public class AlaiWaiSimplify {
         dssPairedData1.setDSSFileName(saveFile);
         int status = dssPairedData1.write(mypdc);
         dssPairedData1.done();
+
+        //Retrieving the Data---------------------------------------
+       /* for (int j = 0; j<pathnameList.length;j++)
+        {
         }
+        */
     }
 }

@@ -30,5 +30,13 @@ class LineThinnerTest {
     void douglasPeukerReductionShouldHaveSimilarAreaUnderCurve() {
         assertTrue(Math.abs((LineThinner.DouglasPeukerReduction(yIsXsquared,.1).getIntegratedArea())-323433) < .01*323433);
     }
+    @Test
+    void douglasPeukerReductionShouldSaveFirstPoint(){
+        assertEquals(yIsXsquared.getPoint(0), LineThinner.DouglasPeukerReduction(yIsXsquared,.1).getPoint(0));
+    }
+    @Test
+    void douglasPeukerReductionShouldSaveLastPoint(){
+        assertEquals(yIsXsquared.getPoint(yIsXsquared.getVerticesCount()-1),LineThinner.DouglasPeukerReduction(yIsXsquared,.1).getPoint(27));
+    }
 }
 
