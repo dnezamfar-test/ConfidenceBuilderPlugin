@@ -20,11 +20,8 @@ class LineTest {
     Line yIsXsquared = new Line(Xords,Yords);
 
     @Test
-    void getPointsList() {
-    }
-
-    @Test
     void getPoint() {
+        assertEquals(new Point(0,0), yIsXsquared.getPoint(0));
     }
 
     @Test
@@ -55,5 +52,7 @@ class LineTest {
 
     @Test
     void addPoint() {
+        yIsXsquared.AddPoint(new Point(500,500));
+        assertEquals(yIsXsquared.getVerticesCount(),101);
     }
 }

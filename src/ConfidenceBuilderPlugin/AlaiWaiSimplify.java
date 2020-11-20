@@ -14,7 +14,7 @@ public class AlaiWaiSimplify {
         // Defining the record
         String DssFilePath = ("C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\Just_Full_Freq.dss");
         String Pathname = "/12-Stochastic/Duration Plugin-AlaWaiDurations12/Probability-undef/Frequency Full/A3 - FLOW - 1 Hour DurationMax/Existing C:Determinis:DuratPlugi-AlaWaiDurations12/\n";
-        String saveFile = "C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\AlaiWai_FullFreq_Production.dss";
+        String saveFile = "C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\AlaiWai_FullFreq_QC.dss";
 
         HecDssCatalog catalog = new HecDssCatalog();
         catalog.setDSSFileName(DssFilePath, true);
@@ -60,8 +60,9 @@ public class AlaiWaiSimplify {
             }
             System.out.println("length of xCoords: "+ xCoordinates2.length);
 
-            //Line mySimpleLineX = new Line(xCoordinates2,mySimpleLine.getYords() );
+
             Line mySimpleLineX = new Line(xCoordinates2,mySimpleLine.getYords() );
+            //Line mySimpleLineX = new Line(xOrds,yOrds );
             System.out.println("last point is: " + mySimpleLineX.getPoint(mySimpleLineX.getVerticesCount()-1).getY());
 
             // Saving everything back
