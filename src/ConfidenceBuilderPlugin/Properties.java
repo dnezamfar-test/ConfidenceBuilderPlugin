@@ -1,8 +1,4 @@
 package ConfidenceBuilderPlugin;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +9,11 @@ public class Properties {
     private ArrayList<Double> _xOrds;
     private ArrayList<Double> _CI_Values;
     private double _binStartWeight;
-    private List<Double> _binWeights;
+    private ArrayList<Double> _binWeights;
     private double _binEndWeights;
 
     //constructor
-    public Properties(String _propertiesFile, String _simulationName, ArrayList<Double> _xOrds, ArrayList<Double> CIvalues, double binStartWeight, List<Double> binWeights, double binEndWeights) {
+    public Properties(String _propertiesFile, String _simulationName, ArrayList<Double> _xOrds, ArrayList<Double> CIvalues, double binStartWeight, ArrayList<Double> binWeights, double binEndWeights) {
         this. _propertiesFile = _propertiesFile;
         this. _simulationName = _simulationName;
         this. _xOrds = _xOrds;

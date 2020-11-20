@@ -5,13 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PropertyFileReader {
     public static Properties Read(String _propertiesFile) {
         //variables
         double endProb = 0;
-        List<Double> weights = new ArrayList<>();
+        ArrayList<Double> weights = new ArrayList<>();
         double startProb = 0;
         double incrementalWeightTemp;
         String _simulationName = "";
@@ -47,10 +46,11 @@ public class PropertyFileReader {
                 if(tmp[0] .equals( "above")){
                         endProb = Double.parseDouble(tmp[1]);
                     }
-                else{
-                        incrementalWeightTemp = Double.parseDouble(tmp[1]);
-                        weights.add(incrementalWeightTemp);
-                    }
+                if(tmp[0].toCharArray()[0] == "L".toCharArray()[0]){
+                    incrementalWeightTemp = Double.parseDouble(tmp[1]);
+                    weights.add(incrementalWeightTemp);
+
+                }
                 }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
