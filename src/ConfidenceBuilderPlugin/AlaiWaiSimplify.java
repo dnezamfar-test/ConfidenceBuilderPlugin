@@ -14,7 +14,7 @@ public class AlaiWaiSimplify {
         // Defining the record
         String DssFilePath = ("C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\Just_Full_Freq.dss");
         String Pathname = "/12-Stochastic/Duration Plugin-AlaWaiDurations12/Probability-undef/Frequency Full/A3 - FLOW - 1 Hour DurationMax/Existing C:Determinis:DuratPlugi-AlaWaiDurations12/\n";
-        String saveFile = "C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\Just_Full_Freq_Simple_V7.dss";
+        String saveFile = "C:\\Projects\\Work\\HEC-WAT\\AlaiWai Freq Curves\\Just_Full_Freq_V7_QC.dss";
 
         HecDssCatalog catalog = new HecDssCatalog();
         catalog.setDSSFileName(DssFilePath, true);
