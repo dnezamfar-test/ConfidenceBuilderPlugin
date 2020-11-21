@@ -1,7 +1,5 @@
 package ConfidenceBuilderPlugin;
-
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class LineTest {
@@ -21,35 +19,30 @@ class LineTest {
 
     @Test
     void getPoint() {
-        assertEquals(new Point(0,0), yIsXsquared.getPoint(0));
+        assertEquals(new Point(0,0).getX(),yIsXsquared.getPoint(0).getX());
+        assertEquals(new Point(0,0).getY(),yIsXsquared.getPoint(0).getY());
     }
-
     @Test
     void getVerticesCount() {
         assertEquals(Xords.length, yIsXsquared.getVerticesCount());
     }
-
     @Test
     void getIntegratedArea() {
-        assertTrue(Math.abs(yIsXsquared.getIntegratedArea()) < .01*323433);
+        assertTrue(Math.abs(yIsXsquared.getIntegratedArea())-323433 < .01*323433);
     }
-
     @Test
     void getXords() {
         assertArrayEquals(Xords,yIsXsquared.getXords());
     }
-
     @Test
     void getYords() {
         assertArrayEquals(Yords,yIsXsquared.getYords());
     }
-
     @Test
     void removePoint() {
         yIsXsquared.RemovePoint(0);
         assertEquals(yIsXsquared.getVerticesCount(),99);
     }
-
     @Test
     void addPoint() {
         yIsXsquared.AddPoint(new Point(500,500));
