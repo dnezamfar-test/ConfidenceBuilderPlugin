@@ -112,6 +112,16 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         }
         //read in properties from properties file
         String propertiesFile = dir + _propertiesPath;
+        Properties myProperties = PropertyFileReader.Read(propertiesFile);
+
+
+
+
+
+
+
+/*        String propertiesFile = dir + _propertiesPath;
+
         String propertyLine = "";
         BufferedReader brp = null;
         File pf = new File(propertiesFile);
@@ -155,9 +165,10 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                      }
                 }
             }            
-        }
+        }*/
 
-        //read in weights from dir/shared/binweights_by_lifecycle.txt
+
+       /* //read in weights from dir/shared/binweights_by_lifecycle.txt
         String weightFile = dir + "/shared/binweights_by_lifecycle.txt";
         String line = "";
         double prob;
@@ -185,7 +196,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
             fr.addMessage("Weights not found, please place the binweights_by_lifecycle.txt file in the shared directory of the WAT project.");
         } catch (IOException e) {
             e.printStackTrace();
-            fr.addMessage("Weights not accessable.");               
+            fr.addMessage("Weights not accessable.");
         } finally {
             if (br != null) {
                  try {
@@ -200,9 +211,10 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                     br.close();
             } catch (IOException e) {
                     e.printStackTrace();
-            }   
+            }
         }
-        if(weights.size()==0)return false;
+        if(weights.size()==0)return false;*/
+
         //process the bin sizes into weights. by dividing by total number of events per bin
         //get the simulation 
         List<ManagerProxy> managerProxyListForType = proj.getManagerProxyListForType(FrmSimulation.class);
@@ -315,7 +327,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                         int realization = 0;
                         for(PairedDataContainer pdci : pdcList){//build the frequency output
                             freqVar.setPairedDataContainer(pdci);
-                            ValueBinIncrementalWeight[] tmp = saveVariableFrequencyRealization(freqVar,pdci,frm,startProb,endProb,weights,realization);
+                            ValueBinIncrementalWeight[] tmp = saveVariableFrequencyRealization(freqVar,pdci,frm,myProperties.getBinStartWeight(),myProperties.getBinEndWeights(),myProperties.getBinWeights(),realization);
                             //saveVariableFrequencyRealization_Thin(freqVar,pdci,frm,startProb,endProb,weights,realization);
                             if(tmp==null){
                                 fr.addMessage("aborting frequency curve calculation.");
@@ -332,10 +344,10 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                         //double[][] allData = getVariableAllFrequencyData(freqVar,frm);
                         //saveVariableFrequencyPercent(freqVar, allData,frm); //5 and 95 percent
 
-                        ValueBinIncrementalWeight[] fullCurve = saveVariableFrequencyFull(freqVar, allData, frm,endProb,startProb,weights);
+                        ValueBinIncrementalWeight[] fullCurve = saveVariableFrequencyFull(freqVar, allData, frm,myProperties.getBinEndWeights(),myProperties.getBinStartWeight(),myProperties.getBinWeights());
                         if(fullCurve!=null){
                             if(_XOrds!=null){
-                                saveVariableFrequencyConfidenceLimits(freqVar, fullCurve, frm,endProb,startProb,weights);
+                                saveVariableFrequencyConfidenceLimits(freqVar, fullCurve, frm,myProperties.getBinStartWeight(),myProperties.getBinEndWeights(),myProperties.getBinWeights());
                             }
                         
                         }else{

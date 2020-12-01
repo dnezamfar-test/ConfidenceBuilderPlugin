@@ -18,7 +18,6 @@ class PropertyFileReaderTest {
 
     @Test
     void PropertyFileReaderReturnsCorrectSimulationName() { assertEquals("12-Stochastic", propertiesTest.getSimulationName()); }
-
     @Test
     void PropertyFileReaderReturnsCorrectName() {
         assertEquals(propertiesTest.getSimulationName(), "12-Stochastic");
@@ -27,12 +26,10 @@ class PropertyFileReaderTest {
     void PropertyFileReaderReturnsCorrectXOrds() {
         assertArrayEquals(propertiesTest.getXOrds().toArray(), xOrds.toArray());
     }
-
     @Test
     void PropertyFileReaderReturnsCorrectCIVals() {
         assertArrayEquals(propertiesTest.getCI_Values().toArray(), cI_Vals.toArray());
     }
-
     @Test
     void PropertyFileReaderReturnsCorrectBinStaringWeight(){
         assertEquals(_binStartWeight,propertiesTest.getBinStartWeight());
