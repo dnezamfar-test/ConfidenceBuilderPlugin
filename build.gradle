@@ -1,7 +1,12 @@
 
 plugins {
     id 'java'
+    id 'maven-publish'
 }
+archivesBaseName = "ConfidenceBuilderPlugin"
+group 'mil.army.usace.hec'
+version '1.0-SNAPSHOT'
+
 repositories {
     jcenter()
     flatDir{
@@ -30,3 +35,29 @@ dependencies {
     implementation name: 'wat'
     implementation name: 'watModel'
 }
+
+jar {
+    manifest {
+        attributes 'RtsPluginMainClass': 'irplugin.IRMain'
+    }
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = archivesBaseName
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username = "$mavenUser"
+                password = "$mavenPassword"
+            }
+            def releasesRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-releases/"
+            def snapshotsRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        }
+    }
+}
+
+publish.dependsOn jar
