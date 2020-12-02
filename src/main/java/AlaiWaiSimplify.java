@@ -1,10 +1,8 @@
-package ConfidenceBuilderPlugin;
 import com.rma.io.DssFileManagerImpl;
 import hec.heclib.dss.HecDssCatalog;
 import hec.heclib.dss.HecPairedData;
 import hec.io.DSSIdentifier;
 import hec.io.PairedDataContainer;
-import static ConfidenceBuilderPlugin.LineThinner.DouglasPeukerReduction;
 import rma.stats.NormalDist;
 import java.util.ArrayList;
 
@@ -45,7 +43,7 @@ public class AlaiWaiSimplify {
             //Calling the reduction
             Line myLine = new Line(xOrds,yOrds);
             System.out.println("last point is: " + myLine.getPoint(myLine.getVerticesCount()-1).getY());
-            Line mySimpleLine = DouglasPeukerReduction(myLine,.001);
+            Line mySimpleLine = LineThinner.DouglasPeukerReduction(myLine,.001);
             System.out.println("Number of vertices final: " + mySimpleLine.getVerticesCount());
             System.out.println("last simple point is: " + myLine.getPoint(myLine.getVerticesCount()-1).getY());
 

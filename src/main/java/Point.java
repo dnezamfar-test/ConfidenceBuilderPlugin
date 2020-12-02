@@ -1,4 +1,3 @@
-package ConfidenceBuilderPlugin;
 
 public class Point {
     //fields

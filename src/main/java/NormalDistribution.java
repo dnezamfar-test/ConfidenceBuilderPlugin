@@ -1,5 +1,3 @@
-package ConfidenceBuilderPlugin;
-
 public class NormalDistribution {
 
     public static double GetInvCDF(double probability){

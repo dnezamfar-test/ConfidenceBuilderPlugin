@@ -1,9 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
+/* * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ConfidenceBuilderPlugin;
 import com.rma.client.Browser;
 import com.rma.client.BrowserAction;
 import com.rma.io.DssFileManagerImpl;
@@ -21,11 +19,8 @@ import hec2.wat.model.tracking.OutputTracker;
 import hec2.wat.model.tracking.OutputVariableImpl;
 import hec2.wat.plugin.SimpleWatPlugin;
 import hec2.wat.plugin.WatPluginManager;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +37,7 @@ import rma.util.RMAIO;
  *
  * @author WatPowerUser
  */
+
 public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWatPlugin {
     public static final String PluginName = "Confidence Builder Plugin";
     public static final String PluginShortName = "Confidence Builder";
@@ -50,9 +46,10 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
     private static final String _propertiesPath = "/cbp/ConfidenceBuilder.props";
     private static List<Double> _XOrds;
     private static List<Double> _CI_Vals;
-    /**
-     * @param args the command line arguments
-     */
+/**
+     * @param args the command line arguments*/
+
+
     public static void main(String[] args) {
         ConfidenceBuilderPlugin p = new ConfidenceBuilderPlugin();
     }
@@ -120,7 +117,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
 
 
 
-/*        String propertiesFile = dir + _propertiesPath;
+        /*String propertiesFile = dir + _propertiesPath;
 
         String propertyLine = "";
         BufferedReader brp = null;
@@ -165,10 +162,11 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                      }
                 }
             }            
-        }*/
+        }
 
 
-       /* //read in weights from dir/shared/binweights_by_lifecycle.txt
+
+ //read in weights from dir/shared/binweights_by_lifecycle.txt
         String weightFile = dir + "/shared/binweights_by_lifecycle.txt";
         String line = "";
         double prob;
@@ -213,8 +211,9 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                     e.printStackTrace();
             }
         }
-        if(weights.size()==0)return false;*/
+        if(weights.size()==0)return false;
 
+*/
         //process the bin sizes into weights. by dividing by total number of events per bin
         //get the simulation 
         List<ManagerProxy> managerProxyListForType = proj.getManagerProxyListForType(FrmSimulation.class);
@@ -442,8 +441,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
 
         freqPdc.labels[0] = "Realization ".concat(realization.toString());
         //write to csv//
-        /*
-        String fileloc = frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\" + removeSpecialChar(vv._name) + "_R_" + realization +".txt";//needs to be stored in the correct location.
+        /*String fileloc = frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\" + removeSpecialChar(vv._name) + "_R_" + realization +".txt";//needs to be stored in the correct location.
         File destFileDirPath = new File(frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\");
         if(!destFileDirPath.exists()){
             destFileDirPath.mkdirs();
@@ -457,6 +455,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
             Logger.getLogger(FrequencyFixerPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
         */
+
         int zeroOnSuccess = DssFileManagerImpl.getDssFileManager().write(freqPdc);
         if (zeroOnSuccess != 0) {
                 frm.addWarningMessage("Failed to save PD Output Variable Frequency to " + outPdc.fileName + ":" + outPdc.fullName + " rv=" + zeroOnSuccess);

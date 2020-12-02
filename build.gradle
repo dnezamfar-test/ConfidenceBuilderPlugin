@@ -1,1 +1,32 @@
-apply plugin: 'java'
+
+plugins {
+    id 'java'
+}
+repositories {
+    jcenter()
+    flatDir{
+        dirs ("lib")
+    }
+}
+
+version = '1.0-SNAPSHOT'
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+    jvmArgs '--enable-preview'
+}
+
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    implementation 'org.junit.platform:junit-platform-commons:1.5.2'
+    implementation name:'commons-collections-2.1'
+    implementation name: 'commons-lang-2.5'
+    implementation name: 'hec'
+    implementation name: 'hecnf'
+    implementation name: 'hecnfPlugin'
+    implementation name: 'jdom-1.0'
+    implementation name: 'rma'
+    implementation name: 'rmadev'
+    implementation name: 'wat'
+    implementation name: 'watModel'
+}

@@ -1,7 +1,5 @@
-package ConfidenceBuilderPlugin;
 import java.util.ArrayList;
 import java.util.Collections;
-
 public class LineThinner {
     //fields
     private static ArrayList<Integer> reducedLineIndices;

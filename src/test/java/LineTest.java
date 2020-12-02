@@ -1,4 +1,3 @@
-package ConfidenceBuilderPlugin;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +18,6 @@ class LineTest {
 
     @Test
     void getPoint() {
-        assertEquals(new Point(0,0).getX(),yIsXsquared.getPoint(0).getX());
         assertEquals(new Point(0,0).getY(),yIsXsquared.getPoint(0).getY());
     }
     @Test

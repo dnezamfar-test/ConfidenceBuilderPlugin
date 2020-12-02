@@ -1,4 +1,3 @@
-package ConfidenceBuilderPlugin;
 import java.util.ArrayList;
 
 public class Line {

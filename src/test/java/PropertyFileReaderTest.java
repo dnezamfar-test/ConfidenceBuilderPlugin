@@ -1,8 +1,7 @@
-package ConfidenceBuilderPlugin;
+
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class PropertyFileReaderTest {
@@ -17,7 +16,9 @@ class PropertyFileReaderTest {
 
 
     @Test
-    void PropertyFileReaderReturnsCorrectSimulationName() { assertEquals("12-Stochastic", propertiesTest.getSimulationName()); }
+    void PropertyFileReaderReturnsCorrectSimulationName() {
+        assertEquals("12-Stochastic", propertiesTest.getSimulationName());
+    }
     @Test
     void PropertyFileReaderReturnsCorrectName() {
         assertEquals(propertiesTest.getSimulationName(), "12-Stochastic");
