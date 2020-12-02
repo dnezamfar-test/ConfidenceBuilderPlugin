@@ -23,7 +23,7 @@ tasks.withType(Test) {
 
 dependencies {
     implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
-    implementation 'org.junit.platform:junit-platform-commons:1.5.2'
+    //implementation 'org.junit.platform:junit-platform-commons:1.5.2'
     implementation name:'commons-collections-2.1'
     implementation name: 'commons-lang-2.5'
     implementation name: 'hec'
