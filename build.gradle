@@ -12,17 +12,17 @@ repositories {
     }
 }
 dependencies {
-    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
-    implementation name:'commons-collections-2.1'
-    implementation name: 'commons-lang-2.5'
-    implementation name: 'hec'
-    implementation name: 'hecnf'
-    implementation name: 'hecnfPlugin'
-    implementation name: 'jdom-1.0'
-    implementation name: 'rma'
-    implementation name: 'rmadev'
-    implementation name: 'wat'
-    implementation name: 'watModel'
+    implementation "org.junit.jupiter:junit-jupiter:5.4.2"
+    implementation name:"commons-collections-2.1"
+    implementation name: "commons-lang-2.5"
+    implementation name: "hec"
+    implementation name: "hecnf"
+    implementation name: "hecnfPlugin"
+    implementation name: "jdom-1.0"
+    implementation name: "rma"
+    implementation name: "rmadev"
+    implementation name: "wat"
+    implementation name: "watModel"
 }
 //TESTING--
 test{
@@ -30,28 +30,28 @@ test{
     testLogging{
         test {
             testLogging {
-                events 'PASSED','FAILED', 'SKIPPED'
+                events "PASSED","FAILED", "SKIPPED"
             }
         }
     }
 }
 tasks.withType(Test) {
     useJUnitPlatform()
-    jvmArgs '--enable-preview'
+    jvmArgs "--enable-preview"
 }
 
 //PUBLISHING--
-version '1.0-SNAPSHOT'
+version "1.0-SNAPSHOT"
 jar {
     manifest {
-        attributes 'RtsPluginMainClass': 'main.java.ConfidenceBuilderPlugin'
+        attributes "RtsPluginMainClass": "main.java.ConfidenceBuilderPlugin"
     }
 }
 publishing {
     publications {
         ConfidenceBuilderArtifact(MavenPublication) {
-            groupId = 'mil.army.usace.hec'
-            artifactId = 'ConfidenceBuilderPlugin'
+            groupId = "mil.army.usace.hec"
+            artifactId = "ConfidenceBuilderPlugin"
             from components.java
         }
     }
@@ -63,7 +63,7 @@ publishing {
             }
             def releasesRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-releases/"
             def snapshotsRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
         }
     }
 }

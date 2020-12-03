@@ -3,13 +3,13 @@ import java.util.List;
 
 public class Properties { 
     //fields
-    private String _propertiesFile;
-    private String _simulationName;
-    private ArrayList<Double> _xOrds;
-    private ArrayList<Double> _CI_Values;
-    private double _binStartWeight;
-    private ArrayList<Double> _binWeights;
-    private double _binEndWeights;
+    private final String _propertiesFile;
+    private final String _simulationName;
+    private final ArrayList<Double> _xOrds;
+    private final ArrayList<Double> _CI_Values;
+    private final double _binStartWeight;
+    private final ArrayList<Double> _binWeights;
+    private final double _binEndWeights;
 
     //constructor
     public Properties(String _propertiesFile, String _simulationName, ArrayList<Double> _xOrds, ArrayList<Double> CIvalues, double binStartWeight, ArrayList<Double> binWeights, double binEndWeights) {
@@ -35,4 +35,6 @@ public class Properties {
     public double getBinStartWeight() { return _binStartWeight; }
     public List<Double> getBinWeights() { return _binWeights; }
     public double getBinEndWeights() { return _binEndWeights; }
+    //methods
 }
+
