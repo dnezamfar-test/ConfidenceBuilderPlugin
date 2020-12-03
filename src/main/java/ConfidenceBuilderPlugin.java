@@ -179,12 +179,6 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         } catch (IOException ex) {
             Logger.getLogger(ConfidenceBuilderPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-            
-            
-            
-            
-            
             for(int i = 0;i<varListList.size();i++){
                 ModelAlternative modelAlt = models.get(i);
                 List<OutputVariableImpl> variablesForModel = varListList.get(i);

@@ -3,24 +3,14 @@ plugins {
     id 'java'
     id 'maven-publish'
 }
-archivesBaseName = "ConfidenceBuilderPlugin"
-group 'mil.army.usace.hec'
-version '1.0-SNAPSHOT'
 
+//DEPENDENCY MANAGEMENT--
 repositories {
     jcenter()
     flatDir{
         dirs ("lib")
     }
 }
-
-version = '1.0-SNAPSHOT'
-
-tasks.withType(Test) {
-    useJUnitPlatform()
-    jvmArgs '--enable-preview'
-}
-
 dependencies {
     implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     implementation name:'commons-collections-2.1'
@@ -34,6 +24,7 @@ dependencies {
     implementation name: 'wat'
     implementation name: 'watModel'
 }
+//TESTING--
 test{
     useJUnitPlatform()
     testLogging{
@@ -44,19 +35,23 @@ test{
         }
     }
 }
+tasks.withType(Test) {
+    useJUnitPlatform()
+    jvmArgs '--enable-preview'
+}
 
+//PUBLISHING--
+version '1.0-SNAPSHOT'
 jar {
     manifest {
         attributes 'RtsPluginMainClass': 'main.java.ConfidenceBuilderPlugin'
     }
 }
-
 publishing {
     publications {
         ConfidenceBuilderArtifact(MavenPublication) {
             groupId = 'mil.army.usace.hec'
             artifactId = 'ConfidenceBuilderPlugin'
-            version = "1.0-SNAPSHOT"
             from components.java
         }
     }
@@ -72,6 +67,4 @@ publishing {
         }
     }
 }
-
-
 publish.dependsOn jar
