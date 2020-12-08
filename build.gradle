@@ -44,7 +44,7 @@ tasks.withType(Test) {
 version "1.0-SNAPSHOT"
 jar {
     manifest {
-        attributes "RtsPluginMainClass": "main.java.ConfidenceBuilderPlugin"
+        attributes "WatPluginMainClass": "ConfidenceBuilderPlugin"
     }
 }
 publishing {
