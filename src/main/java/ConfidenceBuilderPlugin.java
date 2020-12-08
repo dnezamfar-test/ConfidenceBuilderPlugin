@@ -94,9 +94,22 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
     public String getLogfile() {
         return null;
     }
-    public boolean displayApplicationUniqueF(){
-        return displayApplication();
+    public boolean displayApplicationUniqueF() {
+        Thread thread = new Thread() {
+            public void run() {
+                System.out.println("Thread Running");
+                if (displayApplication()) {
+                    System.out.println("Complete");
+                }
+                else {
+                    System.out.println("Something Didn't Work");
+                }
+            }
+        };
+        thread.start();
+        return true;
     }
+
     @Override
     public boolean displayApplication() {
         Project proj = Browser.getBrowserFrame().getCurrentProject();
