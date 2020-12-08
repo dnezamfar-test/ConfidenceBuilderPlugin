@@ -19,8 +19,6 @@ public class AlaiWaiSimplify {
         String[] pathnameList = catalog.getPathnameList(true);
         int recordNumbers = pathnameList.length;
 
-
-
         //Retrieving the Data---------------------------------------
         for (int j = 0; j<pathnameList.length;j++)
         {
