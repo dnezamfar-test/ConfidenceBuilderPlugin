@@ -43,7 +43,7 @@ tasks.withType(Test) {
 //PUBLISHING--
 distributions {
     main {
-        distributionBaseName = 'someName'
+        distributionBaseName = 'ConfidenceBuilderPlugin'
         contents {
             from 'src/WATPluginMarketplaceConfig'
             from 'build/libs'
@@ -52,7 +52,7 @@ distributions {
 }
 
 
-version "1.0-SNAPSHOT"
+version "1.0"
 jar {
     manifest {
         attributes "WatPluginMainClass": "ConfidenceBuilderPlugin"
@@ -66,8 +66,10 @@ publishing {
             artifact distZip
             //artifactId = "ConfidenceBuilderPlugin"
             from components.java
+
         }
     }
+
     repositories {
         maven {
             credentials {
