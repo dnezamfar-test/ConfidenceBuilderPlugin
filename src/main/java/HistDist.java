@@ -5,6 +5,7 @@ import java.util.Arrays;
  * @author Q0HECWPL
  */
 public class HistDist {
+    //Fields
     private int[] _bins;
     private double _binWidth = 0;
     private double _histMin;
@@ -13,6 +14,17 @@ public class HistDist {
     private double _mean = 0;
     private int _convergedIteration =0;
     private boolean _converged = false;
+
+    //Getters
+    public int getNumObs(){
+        return _numObs;
+    }
+    public double getMin(){return _histMin;}
+    public double getMax(){return _histMax;}
+    public boolean getConverged(){ return _converged;}
+    public int getConvergedIteration(){return _convergedIteration;}
+
+    //Constructor
     public HistDist(int numBins, double histMin, double histMax)
     {
         if(numBins<=0 || histMin>histMax)
@@ -26,13 +38,7 @@ public class HistDist {
         Arrays.fill(_bins, 0);
     }
 
-    public int getNumObs(){
-        return _numObs;
-    }
-    public double getMin(){return _histMin;}
-    public double getMax(){return _histMax;}
-    public boolean getConverged(){ return _converged;}
-    public int getConvergedIteration(){return _convergedIteration;}
+    //Methods
     public boolean addObservation(double obs)
     {
         if(_binWidth <= 0 || Double.isInfinite(obs) || Double.isNaN(obs))
