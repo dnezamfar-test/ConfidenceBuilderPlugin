@@ -95,6 +95,9 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         return null;
     }
     public boolean displayApplicationUniqueF() {
+        //return displayApplication();
+
+
         Thread thread = new Thread() {
             public void run() {
                 System.out.println("Thread Running");
@@ -108,16 +111,19 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         };
         thread.start();
         return true;
+
+
     }
 
     @Override
     public boolean displayApplication() {
         Project proj = Browser.getBrowserFrame().getCurrentProject();
         String dir = proj.getProjectDirectory();
-        WatFrame fr = null;
+        WatFrame fr = hec2.wat.WAT.getWatFrame();
         if(dir!=null){
-            fr = hec2.wat.WAT.getWatFrame();
+            fr.addMessage("Found "+dir);
         }else{
+            fr.addMessage("Please Open Project");
             return false;
         }
         //read in properties from properties file
