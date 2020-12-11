@@ -23,6 +23,9 @@ public class HistDist {
     public double getMax(){return _histMax;}
     public boolean getConverged(){ return _converged;}
     public int getConvergedIteration(){return _convergedIteration;}
+    public int getBinCount(){return _bins.length;}
+    public int[] getBins(){return _bins;}
+    public double getMean(){return _mean;}
 
     //Constructor
     public HistDist(int numBins, double histMin, double histMax)
@@ -93,18 +96,20 @@ public class HistDist {
         }
         return true;
     }
-    public double invCDF(double q)
+    public double invCDF(double probability)
     {
-        if(_numObs<=0 || q<=0.0)
+        //specify a probability for the histogram and return a value associated with that probability
+        if(_numObs<=0 || probability<=0.0)
         {
             return _histMin;
         }
-        else if(q>=1.0)
+        else if(probability>=1.0)
         {
             return _histMax;
         }
-        double qObs = q*_numObs;
-        if(q<=0.5)
+        double qObs = probability*_numObs;
+        //qobs number of observations in the histogram less than or equal to the probability
+        if(probability<=0.5)
         {
             int idx = 0;
             int binObs = _bins[idx];
