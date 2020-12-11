@@ -11,6 +11,7 @@ repositories {
         dirs ("lib")
     }
 }
+
 dependencies {
     implementation "org.junit.jupiter:junit-jupiter:5.4.2"
     implementation name:"commons-collections-2.1"
@@ -24,6 +25,7 @@ dependencies {
     implementation name: "wat"
     implementation name: "watModel"
 }
+
 //TESTING--
 test{
     useJUnitPlatform()
@@ -54,6 +56,8 @@ distributions {
 
 version "1.0"
 jar {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
     manifest {
         attributes "WatPluginMainClass": "ConfidenceBuilderPlugin"
     }

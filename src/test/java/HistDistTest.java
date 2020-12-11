@@ -1,10 +1,10 @@
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HistDistTest {
-    HistDist myHD = new HistDist(10,0,10);
+        HistDist myHD = new HistDist(10,0,10);
+        HistDist _dist = new HistDist(10, 0, 10 );
+
     //Testing addObservation --
     @Test
     void addObservationIncreasesBinCountWhenItsLowerThanMin() {
@@ -48,69 +48,51 @@ class HistDistTest {
         double actual = myHD.getMean();
         assertEquals(5.00, actual);
     }
-
-   //Testing InvCDF
-    @Test
-    void invCDF() {
-    }
-
-    //Testing CDF
+   @Test
+   void invCDF() { }
     @Test
     void getCDF() {
+        double actual = _dist.getCDF(1);
+        assertEquals(.1, actual);
     }
-
     @Test
     void getPDF() {
+        double actual = _dist.getPDF(0);
+        assertEquals(.1, actual);
     }
-
     @Test
     void testForConvergence() {
     }
-
     @Test
     void estimateRemainingIterationsForConvergence() {
     }
 
-    HistDist _dist;
-        @BeforeEach
-        void setUp() {
-            _dist = new HistDist(10, 0, 10 );
-            for (int i=0;i<10;i++){
-                _dist.addObservation(i);
-            }
+    @Test
+    void getNumObs(){
+        assertEquals(10,_dist.getNumObs());
         }
 
-        @AfterEach
-        void tearDown() {
-        }
-
-        @Test
-        void getNumObs(){
-            assertEquals(10,_dist.getNumObs());
-        }
-
-        @Test
-        void getMax() {
-            assertEquals(10,_dist.getMax());
+    @Test
+    void getMax() {
+        assertEquals(10,_dist.getMax());
         }
 
 
-        @Test
-        void getMin() {
-            assertEquals(0,_dist.getMin());
+    @Test
+    void getMin() {
+        assertEquals(0,_dist.getMin());
         }
 
 
-        @Test
-        void getConverged() {
+    @Test
+    void getConverged() {
+        // need test data?
+        }
+
+    @Test
+    void getConvergedIteration() {
             // need test data?
         }
-
-        @Test
-        void getConvergedIteration() {
-            // need test data?
-        }
-
         @Test
         void addObservationOverMax() {
             HistDist dist = new HistDist(5, 0, 5);
@@ -118,20 +100,20 @@ class HistDistTest {
                 dist.addObservation(i);
             }
             int[] expected = {1, 1, 1, 1, 1, 1, 1};
-            int[] actual = dist.getbins();
+            int[] actual = dist.getBins();
             assertArrayEquals(expected, actual);
         }
         @Test
-        void addObservationUnderMi() {
+        void addObservationUnderMin() {
             HistDist dist = new HistDist(5, 0, 5);
             for (int i = -1; i < 6; i++) {
                 dist.addObservation(i);
             }
             int[] expected = {1, 1, 1, 1, 1, 1, 1};
-            int[] actual = dist.getbins();
+            int[] actual = dist.getBins();
             assertArrayEquals(expected, actual);
         }
-        /*   @Test
+        @Test
            void addObservationUnderMin_Cruel() {
                HistDist dist = new HistDist(5, 0, 5);
                for (int i = -1; i < 6; i++) {
@@ -143,38 +125,18 @@ class HistDistTest {
 
                }
                int[] expected = {1, 1, 1, 1, 1, 1, 0,1};
-               int[] actual = dist.getbins();
+               int[] actual = dist.getBins();
                assertArrayEquals(expected, actual);
                //  Arrays.equals(actual, expected);
            }
-           */
         @Test
         void addObservations() {
 
         }
 
-        @Test
-        void invCDF() {
-        }
 
-        @Test
-        void getCDF() {
-            double actual = _dist.getCDF(1);
-            assertEquals(.1, actual);
-        }
 
-        @Test
-        void getPDF() {
-            double actual = _dist.getPDF(0);
-            assertEquals(.1, actual);
-        }
 
-        @Test
-        void testForConvergence() {
-        }
 
-        @Test
-        void estimateRemainingIterationsForConvergence() {
-        }
-    }
+
 }
