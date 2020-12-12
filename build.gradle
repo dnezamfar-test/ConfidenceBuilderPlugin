@@ -67,12 +67,11 @@ jar {
 publishing {
     publications {
         ConfidenceBuilderArtifact(MavenPublication) {
-            artifactId = "ConfidenceBuilderPlugin"
             from components.java
+            artifact distZip
 
         }
     }
-
     repositories {
         maven {
             credentials {
