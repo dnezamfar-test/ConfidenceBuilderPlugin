@@ -95,10 +95,10 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         return null;
     }
     public boolean displayApplicationUniqueF() {
-        //return displayApplication();
+        return displayApplication();
 
 
-        Thread thread = new Thread() {
+     /*   Thread thread = new Thread() {
             public void run() {
                 System.out.println("Thread Running");
                 if (displayApplication()) {
@@ -110,7 +110,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
             }
         };
         thread.start();
-        return true;
+        return true;*/
 
 
     }
@@ -129,6 +129,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         //read in properties from properties file
         String propertiesFile = dir + _propertiesPath;
         Properties myProperties = PropertyFileReader.Read(propertiesFile);
+        _simulationName = myProperties.getSimulationName();
 
         //process the bin sizes into weights. by dividing by total number of events per bin
         //get the simulation 
