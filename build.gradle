@@ -43,6 +43,9 @@ tasks.withType(Test) {
 }
 
 //PUBLISHING--
+group = "mil.army.usace.hec"
+version "1.0"
+
 distributions {
     main {
         distributionBaseName = 'ConfidenceBuilderPlugin'
@@ -53,8 +56,6 @@ distributions {
     }
 }
 
-
-version "1.0"
 jar {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -62,13 +63,11 @@ jar {
         attributes "WatPluginMainClass": "ConfidenceBuilderPlugin"
     }
 }
-group = "mil.army.usace.hec"
 
 publishing {
     publications {
         ConfidenceBuilderArtifact(MavenPublication) {
-            artifact distZip
-            //artifactId = "ConfidenceBuilderPlugin"
+            artifactId = "ConfidenceBuilderPlugin"
             from components.java
 
         }
@@ -80,11 +79,9 @@ publishing {
                 username = "$mavenUser"
                 password = "$mavenPassword"
             }
-            //def releasesRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-releases/"
-            //def snapshotsRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-snapshots/"
-            //url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
-            def pluginMarketplaceURL = "https://www.hec.usace.army.mil/nexus/repository/WAT_Plugins/"
-            url = pluginMarketplaceURL
+            def releasesRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-releases/"
+            def snapshotsRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-snapshots/"
+            url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
         }
     }
 }
