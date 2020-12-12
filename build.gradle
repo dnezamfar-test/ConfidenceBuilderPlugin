@@ -79,14 +79,10 @@ publishing {
                 username = "$mavenUser"
                 password = "$mavenPassword"
             }
-/*            This code publishes to release or snapshot based on version name. I've commented it out because
-               I need the Jar to have a stable name (snapshot adds the date to the name of the file) for testing
-               in the WAT, but I don't want to put a broken plugin in the release maven repo.
+
             def releasesRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-releases/"
             def snapshotsRepoUrl = "https://www.hec.usace.army.mil/nexus/repository/maven-snapshots/"
-            url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl*/
-            // the code below just throws it in the snapshot repo regardless of version.
-            url = "https://www.hec.usace.army.mil/nexus/repository/maven-snapshots/"
+            url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
         }
     }
 }
