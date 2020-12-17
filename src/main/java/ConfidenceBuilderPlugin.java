@@ -62,8 +62,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                 addToToolsToolbar();
         }
     }
-    protected void addToToolsToolbar()
-    {
+    protected void addToToolsToolbar() {
         Icon i = RmaImage.getImageIcon("Images/Workstation.gif");
         BrowserAction a = new BrowserAction(PluginShortName,i,this, "displayApplicationUniqueF");
         a.putValue(Action.SHORT_DESCRIPTION, getName());
@@ -95,10 +94,8 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         return null;
     }
     public boolean displayApplicationUniqueF() {
-        return displayApplication();
-
-
-     /*   Thread thread = new Thread() {
+        /*return displayApplication();*/
+        Thread thread = new Thread() {
             public void run() {
                 System.out.println("Thread Running");
                 if (displayApplication()) {
@@ -110,137 +107,149 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
             }
         };
         thread.start();
-        return true;*/
-
-
+        return true;
     }
-
     @Override
     public boolean displayApplication() {
+        //Getting the overhead knowledge of which project we're working with is---
         Project proj = Browser.getBrowserFrame().getCurrentProject();
         String dir = proj.getProjectDirectory();
-        WatFrame fr = hec2.wat.WAT.getWatFrame();
+        WatFrame myWatFrame = hec2.wat.WAT.getWatFrame();
         if(dir!=null){
-            fr.addMessage("Found "+dir);
+            myWatFrame.addMessage("Found "+dir);
         }else{
-            fr.addMessage("Please Open Project");
+            myWatFrame.addMessage("Please Open Project");
             return false;
         }
-        //read in properties from properties file
+
+
+        //read in properties and weights from properties file --
         String propertiesFile = dir + _propertiesPath;
         Properties myProperties = PropertyFileReader.Read(propertiesFile);
         _simulationName = myProperties.getSimulationName();
 
-        //process the bin sizes into weights. by dividing by total number of events per bin
-        //get the simulation 
+
+        //get the simulation --
         List<ManagerProxy> managerProxyListForType = proj.getManagerProxyListForType(FrmSimulation.class);
-        Manager m = null;
-        FrmSimulation frm = null;
-        OutputTracker ot = null;
+        Manager myManager = null;
+        FrmSimulation myFRMSimulation = null;
+        OutputTracker myOutputTracker = null;
         for(ManagerProxy mp : managerProxyListForType){
             if(mp.getName().equals(_simulationName)){
-                //do stuff
-                m = mp.getManager();
-                frm = (FrmSimulation)m;//get the FRM simulation object
-                ot =frm.getOutputTracker();//get the outputTracker object
-                //fr.addMessage("Found simulation ALTP_NOBA");
-            }else{
-                //dont do stuff
-                
+                myManager = mp.getManager();
+                myFRMSimulation = (FrmSimulation)myManager;//get the FRM simulation object
+                myOutputTracker =myFRMSimulation.getOutputTracker();//get the outputTracker object
+                myWatFrame.addMessage("Found simulation");
             }
         }
-        if(ot!=null){
-            fr.addMessage("Output Tracker found");
-            List<OutputVariable> outlist = fr.getOutputVariables(frm, true);
-            List<OutputVariable> freqList = new ArrayList<>();
-            //cycle through all output variables and check to ensure that Frequency Curves Output Variables exist for each output variable. 
-            //a frequency output variable must exist for the frequency viewer to view it.
-            List<List<OutputVariableImpl>> varListList = ot.getVarListList();
+
+
+        //process the bin sizes into weights. by dividing by total number of events per bin
+        if(myOutputTracker!=null){
+            myWatFrame.addMessage("Output Tracker found");
+
+
+            //cycle through all output variables and check to ensure that Frequency Curves Output Variables exist for each
+            // output variable. a frequency output variable must exist for the frequency viewer to view it.
+            List<List<OutputVariableImpl>> varListList = myOutputTracker.getVarListList(); // varListList is a list of output variables, seperated in a single list for each model
             List<List<OutputVariableImpl>> freqvarListList = new ArrayList<>();
             for(int i = 0;i<varListList.size();i++){
-                
                 List<OutputVariableImpl> variablesForModel = varListList.get(i);
                 List<OutputVariableImpl> freqVarForModel = new ArrayList<>();
                 for(int j =0;j<variablesForModel.size();j++){
-                    //fr.addMessage("Output Variable Found: " + variablesForModel.get(j).getName());
-                    OutputVariableImpl c = (OutputVariableImpl) variablesForModel.get(j).clone();//clone the output variables to have frequency curves created.
-                    c.setHasFrequency(true);
-                    freqVarForModel.add(c);                    
+                    OutputVariableImpl c = variablesForModel.get(j).clone();//clone the output variables to have frequency curves created.
+                    c.setHasFrequency(true); //here's where we set them to frequency output variables
+                    freqVarForModel.add(c);
                 }
                 freqvarListList.add(freqVarForModel);
             }
-            ot.setFreqVarListList(freqvarListList);//now they exist on the list, set the data
-            frm.saveData();//not null because ot was retrieved from it...
+            myOutputTracker.setFreqVarListList(freqvarListList);//now they exist on the list, set the data. This list is is almost identical to getVarListList() but has all frequency turned on.
+            myFRMSimulation.saveData();//not null because myOutputTracker was retrieved from it... SAVE
+
+
+
             //now compute frequency with weights for all frequency curves.
-            varListList = ot.getVarListList();
-            
-            List<ModelAlternative> models = frm.getAllModelAlternativeList();
-            
-       String fileloc = frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\outputlocations.txt";
-        File destFileDirPath = new File(frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\");
-        if(!destFileDirPath.exists()){
-            destFileDirPath.mkdirs();
-        }
-        try{
-            BufferedWriter bw = new BufferedWriter(new FileWriter(fileloc));
-             for(int i = 0;i<varListList.size();i++){
-                ModelAlternative modelAlt = models.get(i);
-                List<OutputVariableImpl> variablesForModel = varListList.get(i);
-                if (variablesForModel != null) {
-                    int size = variablesForModel.size();
-                    for (int j = 0; j < size; j++) {
-                        OutputVariableImpl v = variablesForModel.get(j);
-                        bw.write(v.getName() + "\n");
+            //Get the variable list of lists and model list for this simulation--
+            varListList = myOutputTracker.getVarListList();
+            List<ModelAlternative> models = myFRMSimulation.getAllModelAlternativeList();
+
+
+            //Set the output location, and create a directory there if one does not already exist -- This is Will's diagnostics. May not be necessary for compute.
+            String outputLocationsFilePath = myFRMSimulation.getProject().getProjectDirectory() + "\\Weights_TextFiles\\outputlocations.txt";
+            File destFileDirPath = new File(myFRMSimulation.getProject().getProjectDirectory() + "\\Weights_TextFiles\\");
+            if(!destFileDirPath.exists()){
+                destFileDirPath.mkdirs();
+            }
+
+            //Try to write the output variables to the outputlocations textfile. If you can't, throw an exception -- Also part of Will's Diagnostics
+            try{
+                BufferedWriter bw = new BufferedWriter(new FileWriter(outputLocationsFilePath));
+                for(int i = 0;i<varListList.size();i++){
+                    List<OutputVariableImpl> variablesForModel = varListList.get(i);
+                    if (variablesForModel != null) {
+                        int size = variablesForModel.size();
+                        for (int j = 0; j < size; j++) {
+                            OutputVariableImpl v = variablesForModel.get(j);
+                            bw.write(v.getName() + "\n");
+                        }
                     }
                 }
+                bw.flush();
+                bw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ConfidenceBuilderPlugin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            bw.flush();
-            bw.close();
-        } catch (IOException ex) {
-            Logger.getLogger(ConfidenceBuilderPlugin.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            for(int i = 0;i<varListList.size();i++){
-                ModelAlternative modelAlt = models.get(i);
-                List<OutputVariableImpl> variablesForModel = varListList.get(i);
-                if (variablesForModel != null) {
-                    int size = variablesForModel.size();
-                    for (int j = 0; j < size; j++) {
-                        OutputVariableImpl v = variablesForModel.get(j);
-                        PairedDataContainer pdc = v.getPairedDataContainer();
+
+
+            //
+            for(int i = 0;i<varListList.size();i++){ //for each variable
+                ModelAlternative modelAlt = models.get(i);//get the model it comes from
+                List<OutputVariableImpl> variablesForModel = varListList.get(i); //get the output variables associated with that model
+                if (variablesForModel != null) { //if that's not Null
+                    int size = variablesForModel.size(); //record how many variable for this model
+                    for (int j = 0; j < size; j++) { //for how ever many variables in the model
+                        OutputVariableImpl v = variablesForModel.get(j); // read them
+                        PairedDataContainer pdc = v.getPairedDataContainer(); // add them to a pdc
+
+                        //if the pdc doesn't have a file to go to yet save it in the run directory as the simulation name .dss
                         if (pdc.fileName == null || pdc.fileName.isEmpty()) {
-                            String runDir = frm.getSimulationDirectory();
-                            runDir = runDir.concat(RMAIO.userNameToFileName(frm.getName())).concat(".dss");
+                            String runDir = myFRMSimulation.getSimulationDirectory();
+                            runDir = runDir.concat(RMAIO.userNameToFileName(myFRMSimulation.getName())).concat(".dss");
                             pdc.fileName = runDir;
-                            //fr.addMessage(runDir);
+                            //myWatFrame.addMessage(runDir);
                         }
+
+                        //if the pdc doesnt have a record name yet, build it one, and give it to it.
                         if (pdc.fullName == null || pdc.fullName.isEmpty()) {
-                            DSSPathname path = ot.buildDSSPathname(frm, modelAlt, v);
-                            path.setCollectionSequence(0);
+                            DSSPathname path = myOutputTracker.buildDSSPathname(myFRMSimulation, modelAlt, v);
+                            path.setCollectionSequence(0); //This Zero freaks me out. What's it doing here?
                             pdc.fullName = path.getPathname();
-                            //fr.addMessage(pdc.fullName);
                         }else{
                             //testing this out... not sure why my collection mmeber is not defined.
-                            //DSSPathname path = ot.buildDSSPathname(frm, modelAlt, v);
+                            //DSSPathname path = myOutputTracker.buildDSSPathname(myFRMSimulation, modelAlt, v);
                             //path.setCollectionSequence(0);
                             //pdc.fullName = path.getPathname();
                         }
-                        fr.addMessage(pdc.fileName);
-                        fr.addMessage(pdc.fullName);
-                        frm.addMessage(frm.getName() + ":" + modelAlt.getProgram() + "-" + modelAlt.getName()
+
+                        //Write to console where the files are gonna be saved, and what they're gonna be called.
+                        myWatFrame.addMessage("Saving to: " + pdc.fileName);
+                        myWatFrame.addMessage("It is called: " + pdc.fullName);
+
+                        myFRMSimulation.addMessage(myFRMSimulation.getName() + ":" + modelAlt.getProgram() + "-" + modelAlt.getName()
                                         + ":Computing weighted output variable frequency curve " + (j + 1) + "/" + size);
-                        OutputVariableImpl freqVar = ot.getFreqVarForOutputVar(v, i);
-                        fr.addMessage("Computing weighted output variable frequency curve for " + freqVar._name);
+                        OutputVariableImpl freqVar = myOutputTracker.getFreqVarForOutputVar(v, i);
+                        myWatFrame.addMessage("Computing weighted output variable frequency curve for " + freqVar._name);
                         List<PairedDataContainer> pdcList = v.getAllPairedDataList();
-                        fr.addMessage(freqVar._name + " has " + pdcList.size() + " realizations");
+                        myWatFrame.addMessage(freqVar._name + " has " + pdcList.size() + " realizations");
                         freqVar.deleteAllFrequencyPairedData();//tidy up.
                         List<ValueBinIncrementalWeight[]> allData = new ArrayList<>();
                         int realization = 0;
                         for(PairedDataContainer pdci : pdcList){//build the frequency output
                             freqVar.setPairedDataContainer(pdci);
-                            ValueBinIncrementalWeight[] tmp = saveVariableFrequencyRealization(freqVar,pdci,frm,myProperties.getBinStartWeight(),myProperties.getBinEndWeights(),myProperties.getBinWeights(),realization);
-                            //saveVariableFrequencyRealization_Thin(freqVar,pdci,frm,startProb,endProb,weights,realization);
+                            ValueBinIncrementalWeight[] tmp = saveVariableFrequencyRealization(freqVar,pdci,myFRMSimulation,myProperties.getBinStartWeight(),myProperties.getBinEndWeights(),myProperties.getBinWeights(),realization);
+                            //saveVariableFrequencyRealization_Thin(freqVar,pdci,myFRMSimulation,startProb,endProb,weights,realization);
                             if(tmp==null){
-                                fr.addMessage("aborting frequency curve calculation.");
+                                myWatFrame.addMessage("aborting frequency curve calculation.");
                                 return false;
                             }
                             
@@ -248,40 +257,40 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                             //Arrays.sort(tmp);
                             allData.add(tmp);
                             realization++;
-                            fr.addMessage(freqVar._name + " realization " + allData.size() + " computed.");
+                            myWatFrame.addMessage(freqVar._name + " realization " + allData.size() + " computed.");
                             
                         }
-                        //double[][] allData = getVariableAllFrequencyData(freqVar,frm);
-                        //saveVariableFrequencyPercent(freqVar, allData,frm); //5 and 95 percent
+                        //double[][] allData = getVariableAllFrequencyData(freqVar,myFRMSimulation);
+                        //saveVariableFrequencyPercent(freqVar, allData,myFRMSimulation); //5 and 95 percent
 
-                        ValueBinIncrementalWeight[] fullCurve = saveVariableFrequencyFull(freqVar, allData, frm,myProperties.getBinEndWeights(),myProperties.getBinStartWeight(),myProperties.getBinWeights());
+                        ValueBinIncrementalWeight[] fullCurve = saveVariableFrequencyFull(freqVar, allData, myFRMSimulation,myProperties.getBinEndWeights(),myProperties.getBinStartWeight(),myProperties.getBinWeights());
                         if(fullCurve!=null){
                             if(_XOrds!=null){
-                                saveVariableFrequencyConfidenceLimits(freqVar, fullCurve, frm,myProperties.getBinStartWeight(),myProperties.getBinEndWeights(),myProperties.getBinWeights());
+                                saveVariableFrequencyConfidenceLimits(freqVar, fullCurve, myFRMSimulation,myProperties.getBinStartWeight(),myProperties.getBinEndWeights(),myProperties.getBinWeights());
                             }
                         
                         }else{
-                            //fr.addMessage("Simulation thinning didnt work.");
+                            //myWatFrame.addMessage("Simulation thinning didnt work.");
                             return false;
                         }
                         if(fullCurve!=null){
-                        //saveVariableFrequencyFull_Thin(freqVar, fullCurve, frm,endProb,startProb,weights);
+                        //saveVariableFrequencyFull_Thin(freqVar, fullCurve, myFRMSimulation,endProb,startProb,weights);
                         }else{
-                            //fr.addMessage("Simulation thinning didnt work.");
+                            //myWatFrame.addMessage("Simulation thinning didnt work.");
                             return false;
                         }
                     }
                 }
             }
         }else{
-            fr.addMessage("A WAT simulation named "+_simulationName+" was not found, please check your simulation names, and fix the \\cbp\\ConfidenceBuilder.props file to contain the name of the simulation you wish to destratify.");
+            myWatFrame.addMessage("A WAT simulation named "+_simulationName+" was not found, please check your simulation names, and fix the \\cbp\\ConfidenceBuilder.props file to contain the name of the simulation you wish to destratify.");
             return false;
         }
         return true;
     }
 
 
-        private ValueBinIncrementalWeight[] saveVariableFrequencyRealization(OutputVariableImpl vv, PairedDataContainer outPdc, FrmSimulation frm,Double startProb, double endProb, List<Double> weights, int real){
+    private ValueBinIncrementalWeight[] saveVariableFrequencyRealization(OutputVariableImpl vv, PairedDataContainer outPdc, FrmSimulation frm,Double startProb, double endProb, List<Double> weights, int real){
         //BUILD DATA
         int newOrdinates = frm.getYearsInRealization();
         double[] newXOrd = new double[newOrdinates];
