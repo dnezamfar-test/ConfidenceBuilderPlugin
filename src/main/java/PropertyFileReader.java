@@ -63,7 +63,7 @@ public class PropertyFileReader {
                 }
             }
         }
-        return new Properties(_propertiesFile, _simulationName, _xOrds, _CI_Values, startProb, weights, endProb);
+        return new Properties( _simulationName, _xOrds, _CI_Values, startProb, weights, endProb);
     }
 }
 

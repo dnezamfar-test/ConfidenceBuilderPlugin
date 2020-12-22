@@ -144,7 +144,6 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         }
 
 
-        //process the bin sizes into weights. by dividing by total number of events per bin
         if(myOutputTracker!=null){
             myWatFrame.addMessage("Output Tracker found");
 
@@ -201,15 +200,14 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
             }
 
 
-            //
             for(int i = 0;i<varListList.size();i++){ //for each variable
                 ModelAlternative modelAlt = models.get(i);//get the model it comes from
                 List<OutputVariableImpl> variablesForModel = varListList.get(i); //get the output variables associated with that model
                 if (variablesForModel != null) { //if that's not Null
                     int size = variablesForModel.size(); //record how many variable for this model
                     for (int j = 0; j < size; j++) { //for how ever many variables in the model
-                        OutputVariableImpl v = variablesForModel.get(j); // read them
-                        PairedDataContainer pdc = v.getPairedDataContainer(); // add them to a pdc
+                        OutputVariableImpl myOutputVariable = variablesForModel.get(j); // read them
+                        PairedDataContainer pdc = myOutputVariable.getPairedDataContainer(); // add them to a pdc
 
                         //if the pdc doesn't have a file to go to yet save it in the run directory as the simulation name .dss
                         if (pdc.fileName == null || pdc.fileName.isEmpty()) {
@@ -221,15 +219,10 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
 
                         //if the pdc doesnt have a record name yet, build it one, and give it to it.
                         if (pdc.fullName == null || pdc.fullName.isEmpty()) {
-                            DSSPathname path = myOutputTracker.buildDSSPathname(myFRMSimulation, modelAlt, v);
+                            DSSPathname path = myOutputTracker.buildDSSPathname(myFRMSimulation, modelAlt, myOutputVariable);
                             path.setCollectionSequence(0); //This Zero freaks me out. What's it doing here?
                             pdc.fullName = path.getPathname();
-                        }else{
-                            //testing this out... not sure why my collection mmeber is not defined.
-                            //DSSPathname path = myOutputTracker.buildDSSPathname(myFRMSimulation, modelAlt, v);
-                            //path.setCollectionSequence(0);
-                            //pdc.fullName = path.getPathname();
-                        }
+                        }else{ }
 
                         //Write to console where the files are gonna be saved, and what they're gonna be called.
                         myWatFrame.addMessage("Saving to: " + pdc.fileName);
@@ -237,11 +230,17 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
 
                         myFRMSimulation.addMessage(myFRMSimulation.getName() + ":" + modelAlt.getProgram() + "-" + modelAlt.getName()
                                         + ":Computing weighted output variable frequency curve " + (j + 1) + "/" + size);
-                        OutputVariableImpl freqVar = myOutputTracker.getFreqVarForOutputVar(v, i);
+
+                        //This is just cleaning things up:--
+                        OutputVariableImpl freqVar = myOutputTracker.getFreqVarForOutputVar(myOutputVariable, i);
                         myWatFrame.addMessage("Computing weighted output variable frequency curve for " + freqVar._name);
-                        List<PairedDataContainer> pdcList = v.getAllPairedDataList();
+                        List<PairedDataContainer> pdcList = myOutputVariable.getAllPairedDataList();
                         myWatFrame.addMessage(freqVar._name + " has " + pdcList.size() + " realizations");
                         freqVar.deleteAllFrequencyPairedData();//tidy up.
+
+
+
+
                         List<ValueBinIncrementalWeight[]> allData = new ArrayList<>();
                         int realization = 0;
                         for(PairedDataContainer pdci : pdcList){//build the frequency output
@@ -258,7 +257,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                             allData.add(tmp);
                             realization++;
                             myWatFrame.addMessage(freqVar._name + " realization " + allData.size() + " computed.");
-                            
+
                         }
                         //double[][] allData = getVariableAllFrequencyData(freqVar,myFRMSimulation);
                         //saveVariableFrequencyPercent(freqVar, allData,myFRMSimulation); //5 and 95 percent
@@ -267,6 +266,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                         if(fullCurve!=null){
                             if(_XOrds!=null){
                                 saveVariableFrequencyConfidenceLimits(freqVar, fullCurve, myFRMSimulation,myProperties.getBinStartWeight(),myProperties.getBinEndWeights(),myProperties.getBinWeights());
+                                //write method to sort valuebinincremetalweight, xcoords cumulitive incrimental weight, y cords will be values
                             }
                         
                         }else{
@@ -300,6 +300,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         int numOrdinates = outPdc.numberOrdinates;//should be number of events in the lifecycles?
         int numCurves = outPdc.numberCurves; //should be nubmer of lifecycles
 
+        //Checking for errors in Data--
         if(numCurves!=(numlifecycles/numreals)){
             frm.addMessage("there are more curves than lifecycles per real, ignoring old data");
             numCurves = numlifecycles/numreals;
@@ -315,6 +316,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                 realsPerWeightList = (int)val;
             }
         }
+
         //frm.addMessage("There are " + realsPerWeightList + " realizations per the list of weights");
         double totWeight = startProb;
         totWeight+=endProb;
@@ -342,7 +344,6 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
             cumWeight += data[i].getIncrimentalWeight();
             newXOrd[i] = (cumWeight - (data[i].getIncrimentalWeight())/2)/totWeight;//plotting position
             data[i].setPlottingPosition(newXOrd[i]);
-            //s += data[i].getValue() + ", " + data[i].getBin() + ", " + data[i].getEventNumber()+ "\n";
         }
 
         //SAVE PDC
@@ -360,21 +361,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         realization++;  // plus one b/c we are going to show this to the user.
 
         freqPdc.labels[0] = "Realization ".concat(realization.toString());
-        //write to csv//
-        /*String fileloc = frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\" + removeSpecialChar(vv._name) + "_R_" + realization +".txt";//needs to be stored in the correct location.
-        File destFileDirPath = new File(frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\");
-        if(!destFileDirPath.exists()){
-            destFileDirPath.mkdirs();
-        }
-        try{
-            BufferedWriter bw = new BufferedWriter(new FileWriter(fileloc));
-            bw.write(s);
-            bw.flush();
-            bw.close();
-        } catch (IOException ex) {
-            Logger.getLogger(FrequencyFixerPlugin.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
+
 
         int zeroOnSuccess = DssFileManagerImpl.getDssFileManager().write(freqPdc);
         if (zeroOnSuccess != 0) {
@@ -391,8 +378,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
     protected ValueBinIncrementalWeight[] saveVariableFrequencyFull(OutputVariableImpl vv, List<ValueBinIncrementalWeight[]> allData, FrmSimulation frm, double endProb, double startProb, List<Double> weights) {
         int colSize = allData == null ? 0 : allData.size();//number of realizations?
         int numOrds = colSize <= 0 ? 0 : allData.get(0).length;
-        //colSize = number of curves
-        //numOrds = number of ordinates in each curve
+
         int realsPerWeightList = 1;
         int realizations = frm.getNumberRealizations();
         int lifecycles = frm.getNumberLifeCycles();
@@ -430,29 +416,16 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         double[] yOrdinates = new double[fullSize];
         double cumWeight = endProb;
         int scaleFactor =realizations/realsPerWeightList;
-        //write to text file for greg
-//        String s = "Plotting Position, Value\n";
+
         for (int k = 0; k < fullSize; k++) {
             cumWeight += fullCurve[k].getIncrimentalWeight()/scaleFactor;
             xOrdinates[k] = (cumWeight-((fullCurve[k].getIncrimentalWeight()/scaleFactor)/2))/totWeight;
             yOrdinates[k] = fullCurve[k].getValue();
-//            s += xOrdinates[k] + ", " + yOrdinates[k] + "\n";
         }
-//        String fileloc = frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\" + vv._name + "_Lift_"+ _liftNumber +"_FrequencyFull.txt";
-//        File destFileDirPath = new File(frm.getProject().getProjectDirectory() + "\\Weights_TextFiles\\");
-//        if(!destFileDirPath.exists()){
-//            destFileDirPath.mkdirs();
-//        }
-//        try{
-//            BufferedWriter bw = new BufferedWriter(new FileWriter(fileloc));
-//            bw.write(s);
-//            bw.flush();
-//            bw.close();
-//        } catch (IOException ex) {
-//            Logger.getLogger(FrequencyFixerPlugin.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
         //SAVE FULL PDCs
         PairedDataContainer freqPdc = vv.getFullFrequencyPairedData();
+        PairedDataContainer freqThinPdc = vv.getThinFrequencyPairedData(); // Use this guy. Overwrite the data. Consider cleaning up extras from the initial longer array.
 
         freqPdc.numberOrdinates = fullSize;
         freqPdc.numberCurves = 1;
@@ -469,7 +442,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         return fullCurve;
     }
     public void saveVariableFrequencyConfidenceLimits(OutputVariableImpl vv, ValueBinIncrementalWeight[] fullCurve, FrmSimulation frm, double endProb, double startProb, List<Double> weights){
-        //sort by realizatoin (ascending)
+        //sort by realization (ascending)
         ValueBinIncrementalWeight.setSort(false);
         Arrays.sort(fullCurve);
         //separate into bin arrays.
@@ -568,8 +541,8 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                         foundVal = true;
                         if(prevVal==null){
                             //shit.
-                            verticalSlices.get(ordcount).addObservation(obj.getValue());
-                        }else{
+                            verticalSlices.get(ordcount).addObservation(obj.getValue()); }
+                        else{
                             //interpolate
                             double y1 = prevVal.getValue();
                             double y2 = obj.getValue();
@@ -587,22 +560,14 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                             }
                             break;
                         }
-                    }else{
-                        //do nothing until coerced..
-                        
                     }
-                    
                     prevVal = obj;
                 }
                 if(!foundVal){frm.addMessage("Did not find a value for ord " + ordcount + " which has probability " + d + " on realization " + realcount + " for location " + vv.getName());}
             }
-            //verticalSlices.get(ordcount).testForConvergence(.05, .95, .1, .0001);
-            //frm.addMessage("Failure Count: " + failureCount);
             frm.addMessage(vv._name + " converged: " + verticalSlices.get(ordcount).getConverged() + " for vertical probabilty slice of " + d);
             if(verticalSlices.get(ordcount).getConverged()){
                 frm.addMessage(vv._name + " converged on iter: " + verticalSlices.get(ordcount).getConvergedIteration());
-            }else{
-                //frm.addMessage(vv._name + " needs more iters: " + verticalSlices.get(ordcount).estimateRemainingIterationsForConvergence);
             }
             ordcount++;  
         }
@@ -618,8 +583,6 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
                 vals[i] = verticalSlices.get(i).invCDF(o);
             }
             PairedDataContainer freqPdc = vv.getFullFrequencyPairedData();
-//            PairedDataContainer thinPdc = new PairedDataContainer();
-//            freqPdc.clone(thinPdc);
             freqPdc.numberOrdinates = _XOrds.size();
             freqPdc.numberCurves = 1;
             freqPdc.xOrdinates = xordinates;
