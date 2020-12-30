@@ -23,6 +23,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -426,6 +427,24 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         //SAVE FULL PDCs
         PairedDataContainer freqPdc = vv.getFullFrequencyPairedData();
         PairedDataContainer freqThinPdc = vv.getThinFrequencyPairedData(); // Use this guy. Overwrite the data. Consider cleaning up extras from the initial longer array.
+        Line thinFreqLine = LineThinner.DouglasPeukerReduction(ConvertValueBinIncrementalWeight2Line(fullCurve), .1);
+
+        freqThinPdc.numberOrdinates = thinFreqLine.getVerticesCount();
+        freqThinPdc.numberCurves = 1;
+        freqThinPdc.xOrdinates = thinFreqLine.getXords();
+        freqThinPdc.yOrdinates = new double[][]{thinFreqLine.getYords()};
+        freqThinPdc.xparameter = "Probability";
+        freqThinPdc.labelsUsed = true;
+        freqThinPdc.labels = new String[1];
+        freqThinPdc.labels[0] = "All Realizations";
+
+        int zeroOnSuccess = DssFileManagerImpl.getDssFileManager().write(freqPdc);
+        if (zeroOnSuccess != 0) {
+            frm.addWarningMessage("Failed to save PD Output Variable Frequency to " + freqThinPdc.fileName + ":" + freqThinPdc.fullName + " rv=" + zeroOnSuccess);
+        }
+        else{
+            frm.addMessage("saved it!");
+        }
 
         freqPdc.numberOrdinates = fullSize;
         freqPdc.numberCurves = 1;
@@ -435,10 +454,15 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         freqPdc.labelsUsed = true;
         freqPdc.labels = new String[1];
         freqPdc.labels[0] = "All Realizations";
-        int zeroOnSuccess = DssFileManagerImpl.getDssFileManager().write(freqPdc);
+
+        zeroOnSuccess = DssFileManagerImpl.getDssFileManager().write(freqPdc);
         if (zeroOnSuccess != 0) {
             frm.addWarningMessage("Failed to save PD Output Variable Frequency to " + freqPdc.fileName + ":" + freqPdc.fullName + " rv=" + zeroOnSuccess);
         }
+        else{
+            frm.addMessage("saved it!");
+        }
+
         return fullCurve;
     }
     public void saveVariableFrequencyConfidenceLimits(OutputVariableImpl vv, ValueBinIncrementalWeight[] fullCurve, FrmSimulation frm, double endProb, double startProb, List<Double> weights){
@@ -611,5 +635,23 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
     }
     private boolean isAppInstalled() {
             return true;
+    }
+    private Line ConvertValueBinIncrementalWeight2Line( ValueBinIncrementalWeight[] myVBIWArray){
+        ArrayList<Double> tmpXOrds = new ArrayList<Double>();
+        ArrayList<Double> tmpYOrds = new ArrayList<Double>();
+        double[] arrayX = new double[myVBIWArray.length];
+        double[] arrayY = new double[myVBIWArray.length];
+
+        for(int i = 0; i< myVBIWArray.length; i++ ){
+            tmpXOrds.add(myVBIWArray[i].getIncrimentalWeight());
+            tmpYOrds.add(myVBIWArray[i].getValue());}
+
+        for(int i = 0; i< myVBIWArray.length; i++) {
+            arrayX[i] = tmpXOrds.get(i).doubleValue();
+            arrayY[i] = tmpYOrds.get(i).doubleValue();
+        }
+
+        Line myLine = new Line(arrayX,arrayY);
+        return myLine;
     }
 }
