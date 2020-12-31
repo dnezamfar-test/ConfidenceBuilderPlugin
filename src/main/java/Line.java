@@ -9,8 +9,8 @@ public class Line {
     public Point getPoint(int index){return _pointsList.get(index);}
     public int getVerticesCount(){return _pointsList.size();}
     public double getIntegratedArea(){return MidpointIntegral();}
-    public double[] getXords(){ return ConvertToOrdArray(0);}
-    public double[] getYords(){ return ConvertToOrdArray(1);}
+    public double[] getXords(){ return GetOrdArrayFromLineOrdPairs(0);}
+    public double[] getYords(){ return GetOrdArrayFromLineOrdPairs(1);}
 
     //Constructor
     public Line() {
@@ -22,7 +22,8 @@ public class Line {
             Point pt = new Point(x[i],y[i]);
                 _pointsList.add(pt);
             }
-        }
+    }
+
     //Methods
     public void RemovePoint(int index){_pointsList.remove(index);}
     public void AddPoint(Point pnt){_pointsList.add(pnt);}
@@ -36,7 +37,7 @@ public class Line {
       }
       return area;
     }
-    private double[] ConvertToOrdArray(int xOrYIndex){
+    private double[] GetOrdArrayFromLineOrdPairs(int xOrYIndex){
         ArrayList<Point> pointList = _pointsList;
         double[] Ords = new double[pointList.size()];
         for(int i = 0; i<pointList.size(); i++){

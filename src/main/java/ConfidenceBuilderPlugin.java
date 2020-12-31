@@ -438,12 +438,13 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
         freqThinPdc.labels = new String[1];
         freqThinPdc.labels[0] = "All Realizations";
 
-        int zeroOnSuccess = DssFileManagerImpl.getDssFileManager().write(freqPdc);
+        int zeroOnSuccess = DssFileManagerImpl.getDssFileManager().write(freqThinPdc);
         if (zeroOnSuccess != 0) {
             frm.addWarningMessage("Failed to save PD Output Variable Frequency to " + freqThinPdc.fileName + ":" + freqThinPdc.fullName + " rv=" + zeroOnSuccess);
         }
         else{
-            frm.addMessage("saved it!");
+            frm.addMessage("The thinned line for " + freqThinPdc.fullName + " is " + freqThinPdc.numberOrdinates + "long.");
+            frm.addMessage("saved " + freqThinPdc.fullName + " to " + freqThinPdc.fileName + "!");
         }
 
         freqPdc.numberOrdinates = fullSize;
@@ -460,7 +461,7 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
             frm.addWarningMessage("Failed to save PD Output Variable Frequency to " + freqPdc.fileName + ":" + freqPdc.fullName + " rv=" + zeroOnSuccess);
         }
         else{
-            frm.addMessage("saved it!");
+            frm.addMessage("saved " + freqPdc.fullName + " to " + freqPdc.fileName + "!");
         }
 
         return fullCurve;
@@ -637,18 +638,20 @@ public class ConfidenceBuilderPlugin extends AbstractPlugin implements SimpleWat
             return true;
     }
     private Line ConvertValueBinIncrementalWeight2Line( ValueBinIncrementalWeight[] myVBIWArray){
-        ArrayList<Double> tmpXOrds = new ArrayList<Double>();
-        ArrayList<Double> tmpYOrds = new ArrayList<Double>();
+        ArrayList<Double> tempIncWeights = new ArrayList<Double>();
+        ArrayList<Double> tempValues = new ArrayList<Double>();
         double[] arrayX = new double[myVBIWArray.length];
         double[] arrayY = new double[myVBIWArray.length];
 
         for(int i = 0; i< myVBIWArray.length; i++ ){
-            tmpXOrds.add(myVBIWArray[i].getIncrimentalWeight());
-            tmpYOrds.add(myVBIWArray[i].getValue());}
+            tempIncWeights.add(myVBIWArray[i].getIncrimentalWeight());
+            tempValues.add(myVBIWArray[i].getValue());}
 
+        double cumIncrementalWeight = 0;
         for(int i = 0; i< myVBIWArray.length; i++) {
-            arrayX[i] = tmpXOrds.get(i).doubleValue();
-            arrayY[i] = tmpYOrds.get(i).doubleValue();
+            cumIncrementalWeight += tempIncWeights.get(i).doubleValue();
+            arrayX[i] = cumIncrementalWeight;
+            arrayY[i] = tempValues.get(i).doubleValue();
         }
 
         Line myLine = new Line(arrayX,arrayY);
